@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绝对定位布局</title>
+    <style>
+        .wrap{
+            height: 400px;
+            background: gray;
+            width: 80%;
+        }
+        .box1 {
+            background: yellow;
+            height: 300px;
+        }
+
+        .box {
+            position: relative;
+            height: 60px;
+            background: rebeccapurple;
+        }
+
+        .box2 {
+            background: greenyellow;
+            top: 15px;
+            left: 30px;
+            height: 100px;
+            position: absolute;
+        }
+        .box3 {
+            background: blue;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="box1"></div>
+    <div class="box">
+        <div class="box2">asdfasdfad</div>
+    </div>
+    <div class="box3"></div>
+</div>
+</body>
+</html>

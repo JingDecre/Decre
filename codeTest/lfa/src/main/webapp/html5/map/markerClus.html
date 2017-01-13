@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=GnyzTKlAnHyVFMOcTSiwuFur"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+    <script type="text/javascript" src="MarkerClusterer.js"></script>
+
+    <title>点聚合</title>
+</head>
+<body>
+<div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");
+    map.centerAndZoom(new BMap.Point(116.404, 39.915), 4);
+    map.enableScrollWheelZoom();
+    myMarkerClusterer();
+    function myMarkerClusterer() {
+
+        var markerArr = [
+            { title: "名称：金陵饭店", point: "118.789287,32.048784", address: "南京", tel: "12306" },
+            { title: "名称：金奥费尔蒙酒店", point: "118.789287,32.048784", address: "南京", tel: "18500000000" },
+            { title: "名称：黄埔大酒店", point: "118.817663,32.048446", address: "南京", tel: "18500000000" },
+            { title: "名称：苏宁银河诺富特", point: "118.897611,32.091566", address: "南京", tel: "18500000000" }
+
+        ];
+
+        var point = new Array(); //存放标注点经纬信息的数组
+        var marker = new Array(); //存放标注点对象的数组
+        var info = new Array(); //存放提示信息窗口对象的数组
+        var label = new Array();
+
+        for (var i = 0; i < markerArr.length; i++) {
+            var p0 = markerArr[i].point.split(",")[0]; //
+            var p1 = markerArr[i].point.split(",")[1]; //按照原数组的point格式将地图点坐标的经纬度分别提出来
+            point[i] = new BMap.Point(p0, p1); //循环生成新的地图点
+            marker[i] = new BMap.Marker(point[i]); //按照地图点坐标生成标记
+            map.addOverlay(marker[i]);
+            //marker[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            label[i] = new BMap.Label(markerArr[i].title, { offset: new window.BMap.Size(20, -10) });
+            label[i].enableMassClear = true;
+            marker[i].setLabel(label[i]);
+            info[i] = new BMap.InfoWindow("<p style=’font-size:12px;lineheight:1.8em;’>" + markerArr[i].title + "</br>地址：" + markerArr[i].address + "</br> 电话：" + markerArr[i].tel + "</br></p>"); // 创建信息窗口对象
+        }
+        for (var i = 0; i < marker.length; i++) {
+            (function () {
+                var index = i;
+                marker[i].addEventListener('click', function () {
+                    this.openInfoWindow(info[index]);
+                });
+            })();
+        }
+        //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+        var markerClusterer = new BMapLib.MarkerClusterer(map, { markers: marker });
+    }
+</script>

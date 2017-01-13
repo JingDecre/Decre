@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no">
+    <title>map2</title>
+    <style type="text/css">
+        html{height: 100%}
+        body{height: 100%;margin: 0px;padding: 0px}
+        #container{height: 100%}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=iQ5QGtEYuTDLI4LCnp9njGtB9KucyKcE"></script>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        var map = new BMap.Map("container");
+        var poi = new BMap.Point(118.183143,24.510035);
+        map.centerAndZoom(poi,15);//地图初始化
+        map.enableScrollWheelZoom();
+        addMarker(poi);
+
+        /*var mark = new BMap.Marker(poi);
+        map.addOverlay(mark);*/
+       /* function addMarker(point,index){
+        var myIcon = new BMap.Icon("raw/icon-P.png",new BMap.Size(23,25),{
+            offset:new BMap.Size(10,25),
+            imageOffset:new BMap.Size(0,0-index * 25)
+        });
+            var marker = new BMap.Marker(point,{icon:myIcon});
+            map.addOverlay(marker);
+        }*/
+        function addMarker(point){
+            var myIcon = new BMap.Icon("raw/icon-P.png",new BMap.Size(23,25),{
+                offset:new BMap.Size(10,25),
+                imageOffset:new BMap.Size(0,5)
+            });
+            var marker = new BMap.Marker(point,{icon:myIcon});
+            map.addOverlay(marker);
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE);
+            marker.addEventListener("click",function(e){
+                alert("当前位置："+ e.point.lng+","+ e.point.lat);
+            });
+            marker.addEventListener("dragend",function(e){
+                alert("当前位置："+ e.point.lng+","+ e.point.lat);
+            });
+            /*marker.enableDragging();*/
+        }
+        // 随机向地图添加25个标注
+        /*var bounds = map.getBounds();
+        var sw = bounds.getSouthWest();
+        var ne = bounds.getNorthEast();
+        var lngSpan = Math.abs(sw.lng - ne.lng);
+        var latSpan = Math.abs(ne.lat - sw.lat);
+        for (var i = 0; i < 25; i ++) {
+            var point = new BMap.Point(sw.lng + lngSpan * (Math.random() * 0.7), ne.lat - latSpan * (Math.random() * 0.7));
+            addMarker(point);
+        }*/
+
+       /* window.setTimeout(function(){
+            map.panTo(new BMap.Point(118.183354,32.51019));
+        },2000);*/
+        var opts2 = {type:BMAP_NAVIGATION_CONTROL_LARGE}
+        map.addControl(new BMap.NavigationControl(opts2));//地图平移缩放控件
+        var opts1 = {offset:new BMap.Size(500,20)}
+        map.addControl(new BMap.ScaleControl(opts1));//比例尺控件
+        map.addControl(new BMap.OverviewMapControl());//缩略地图控件
+        map.addControl(new BMap.MapTypeControl());
+        map.setCurrentCity("厦门");
+
+
+    </script>
+</body>
+</html>

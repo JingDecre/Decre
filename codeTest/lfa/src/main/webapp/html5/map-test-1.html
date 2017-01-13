@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地图标注</title>
+    <style type="text/css">
+
+        html{height:100%}
+
+        body{height:100%;margin:0px;padding:0px;}
+
+    </style>
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=iQ5QGtEYuTDLI4LCnp9njGtB9KucyKcE"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/map-right.css">
+    <link rel="stylesheet" type="text/css" href="css/aio_tour.css">
+
+</head>
+<body>
+<!--<input type="text" id="cityName" value="福州"/>
+
+<input type="button" onclick="setCity()" value="查找" />
+
+<div id="container" style="width:1024px;height:600px;"></div>-->
+<div id="allmap"  style="width:1500px;height:700px;"></div>
+<div class="side" id="side" style="height: 100%;">
+    <a class="side-toggle" id="side-toggle" >
+
+    </a>
+    <div class="side-container" id="side-container">
+        <div class="filter">
+            <div class="combo-box search">
+                <a class="combo-box-trigger" href="javascript: void(0);">
+                    <span class="combo-box-text search-text">全国</span>
+                    <i class="drop-icon" id="drop-icon"></i>
+                </a>
+                <div class="combo-box-wrapper" id="combo-box-wrapper" style="display: none;">
+                    <div class="area-list-container">
+                        <div class="area-list">
+                            <div class="area-group">
+                                <div class="area-group-name">默认：</div>
+                                <div class="area-group-list"><a href="javascript: void(0);"
+                                                                class="area-group-item" data-group="0"
+                                                                data-item="0" data-id="0">全国</a></div>
+                            </div>
+                            <div class="area-group">
+                                <div class="area-group-name">华北：</div>
+                                <div class="area-group-list"><a href="javascript: void(0);"
+                                                                class="area-group-item" data-group="1"
+                                                                data-item="0" data-id="1">北京</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="1"
+                                        data-item="1" data-id="3">天津</a><a href="javascript: void(0);"
+                                                                           class="area-group-item"
+                                                                           data-group="1" data-item="2"
+                                                                           data-id="13">河北</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="1"
+                                        data-item="3" data-id="22">内蒙古</a><a href="javascript: void(0);"
+                                                                             class="area-group-item"
+                                                                             data-group="1" data-item="4"
+                                                                             data-id="26">山西</a></div>
+                            </div>
+                            <div class="area-group">
+                                <div class="area-group-name">华东：</div>
+                                <div class="area-group-list"><a href="javascript: void(0);"
+                                                                class="area-group-item" data-group="2"
+                                                                data-item="0" data-id="2">上海</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="2"
+                                        data-item="1" data-id="5" onclick="fujian();">福建</a><a href="javascript: void(0);"
+                                                                                               class="area-group-item"
+                                                                                               data-group="2" data-item="2"
+                                                                                               data-id="9">安徽</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="2"
+                                        data-item="3" data-id="19">江苏</a><a href="javascript: void(0);"
+                                                                            class="area-group-item"
+                                                                            data-group="2" data-item="4"
+                                                                            data-id="20">江西</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="2"
+                                        data-item="5" data-id="25">山东</a><a href="javascript: void(0);"
+                                                                            class="area-group-item"
+                                                                            data-group="2" data-item="6"
+                                                                            data-id="32">浙江</a></div>
+                            </div>
+                            <div class="area-group">
+                                <div class="area-group-name">华南：</div>
+                                <div class="area-group-list"><a href="javascript: void(0);"
+                                                                class="area-group-item" data-group="3"
+                                                                data-item="0" data-id="4">广东</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="3"
+                                        data-item="1" data-id="8">海南</a><a href="javascript: void(0);"
+                                                                           class="area-group-item"
+                                                                           data-group="3" data-item="2"
+                                                                           data-id="12">广西</a></div>
+                            </div>
+                            <div class="area-group">
+                                <div class="area-group-name">西南：</div>
+                                <div class="area-group-list"><a href="javascript: void(0);"
+                                                                class="area-group-item" data-group="4"
+                                                                data-item="0" data-id="10">贵州</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="4"
+                                        data-item="1" data-id="28">四川</a><a href="javascript: void(0);"
+                                                                            class="area-group-item"
+                                                                            data-group="4" data-item="2"
+                                                                            data-id="29">西藏</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="4"
+                                        data-item="3" data-id="31">云南</a><a href="javascript: void(0);"
+                                                                            class="area-group-item"
+                                                                            data-group="4" data-item="4"
+                                                                            data-id="33">重庆</a></div>
+                            </div>
+                            <div class="area-group">
+                                <div class="area-group-name">西北：</div>
+                                <div class="area-group-list"><a href="javascript: void(0);"
+                                                                class="area-group-item" data-group="5"
+                                                                data-item="0" data-id="11">甘肃</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="5"
+                                        data-item="1" data-id="23">宁夏</a><a href="javascript: void(0);"
+                                                                            class="area-group-item"
+                                                                            data-group="5" data-item="2"
+                                                                            data-id="24">青海</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="5"
+                                        data-item="3" data-id="27">陕西</a><a href="javascript: void(0);"
+                                                                            class="area-group-item"
+                                                                            data-group="5" data-item="4"
+                                                                            data-id="30">新疆</a></div>
+                            </div>
+                            <div class="area-group">
+                                <div class="area-group-name">华中：</div>
+                                <div class="area-group-list"><a href="javascript: void(0);"
+                                                                class="area-group-item" data-group="6"
+                                                                data-item="0" data-id="14">河南</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="6"
+                                        data-item="1" data-id="16">湖北</a><a href="javascript: void(0);"
+                                                                            class="area-group-item"
+                                                                            data-group="6" data-item="2"
+                                                                            data-id="17">湖南</a></div>
+                            </div>
+                            <div class="area-group">
+                                <div class="area-group-name">东北：</div>
+                                <div class="area-group-list"><a href="javascript: void(0);"
+                                                                class="area-group-item" data-group="7"
+                                                                data-item="0" data-id="15">黑龙江</a><a
+                                        href="javascript: void(0);" class="area-group-item" data-group="7"
+                                        data-item="1" data-id="18">吉林</a><a href="javascript: void(0);"
+                                                                            class="area-group-item"
+                                                                            data-group="7" data-item="2"
+                                                                            data-id="21">辽宁</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="combo-box order">
+                <a class="combo-box-trigger" href="javascript: void(0);">
+                    <span class="combo-box-text search-text">科拓拥挤指数从高到低</span>
+                    <i class="drop-icon"></i>
+                </a>
+            </div>
+        </div>
+        <div class="search-container">
+            <div class="search-box">
+                <input type="search" class="search-input" maxlength="15" placeholder="输入景点或省份/直辖市名称" >
+                <a class="search-close" href="javascript:void(0)"></a>
+            </div>
+            <div class="search-scroll scroll-bar" style="display: none;">
+                <div class="search-result scroll-bar-item" style="top: 0px;"></div>
+                <div class="scroll-bar-rail" style="display: none;">
+                    <div class="scroll-bar-line"></div>
+                    <div class="scroll-bar-grab" style="top: 0px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="list-scroll scroll scroll-bar">
+            <ul id="list" class="list scroll-bar-item" style="top: 0px;">
+                <li data-index="0" id="scenic-1">
+                    <a href="javascript:void(0);">
+                        <span class="scenic" title="鼓浪屿">鼓浪屿adfadfadafdfa</span>
+                        <span class="scenic-heat heat-4"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<script>
+   $(function(){
+       $("#side-toggle").toggle(
+               function(){
+                   $("#side").animate({right:"-319px"},"fast");
+                   /* $("#side-container").animate({left:'319px'},"slow");
+                    $("#side-toggle").animate({left:'304px'},"slow");*/
+                },
+               function(){
+                   $("#side").animate({right:"0px"},"fast");
+               }
+       );
+       $("#drop-icon").toggle(
+               function(){
+                   $("#combo-box-wrapper").show();
+               },
+               function(){
+                   $("#combo-box-wrapper").hide();
+               }
+       )
+   })
+
+</script>
+<script type="text/javascript">
+
+    var map = new BMap.Map("allmap");        //在container容器中创建一个地图,参数container为div的id属性;
+    var point = new BMap.Point(119.275444,26.093592);
+    map.centerAndZoom(point, 8);
+    var OpiAr = function(lon,lat){
+        this.lon =lon;
+        this.lat =lat;
+    };
+    var pointList = [
+        new OpiAr(119.551404, 26.690106),
+        new OpiAr(118.171606, 26.665314),
+        new OpiAr(119.293841, 26.110204),
+        new OpiAr(118.999485, 25.485637),
+        new OpiAr(117.619687, 26.292776),
+        new OpiAr(118.659135, 24.916512),
+        new OpiAr(118.061222, 24.487914),
+        new OpiAr(117.638085, 24.529999),
+        new OpiAr(116.994179, 25.092558)
+    ];
+    map.addControl(new BMap.NavigationControl());        // 添加平移缩放控件
+    map.addControl(new BMap.ScaleControl());             // 添加比例尺控件
+    map.addControl(new BMap.OverviewMapControl());       //添加缩略地图控件
+    map.enableScrollWheelZoom();                         //启用滚轮放大缩小
+    map.disable3DBuilding();
+
+    //个性化在线编辑器地址：http://developer.baidu.com/map/custom/
+    var styleJson = [
+        {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": {
+                "color": "#3d435a"
+            }
+        },
+        {
+            "featureType": "all",
+            "elementType": "labels",
+            "stylers": {
+                "visibility": "off"
+            }
+        },
+        {
+            "featureType": "land",
+            "elementType": "geometry.fill",
+            "stylers": {
+                "color": "#494545",
+                "hue": "#000000",
+                "lightness": 19,
+                "saturation": -10,
+                "visibility": "on"
+            }
+        },
+        {
+            "featureType": "green",
+            "elementType": "all",
+            "stylers": {
+                "color": "#5e5757"
+            }
+        },
+        {
+            "featureType": "boundary",
+            "elementType": "all",
+            "stylers": {
+                "color": "#a169e3",
+                "lightness": -52
+            }
+        },
+        {
+            "featureType": "road",
+            "elementType": "all",
+            "stylers": {
+                "color": "#726b6b",
+                "lightness": -36
+            }
+        },
+        {
+            "featureType": "manmade",
+            "elementType": "all",
+            "stylers": {
+                "color": "#787070"
+            }
+        },
+        {
+            "featureType": "building",
+            "elementType": "all",
+            "stylers": {
+                "color": "#635b5b",
+                "lightness": 4
+            }
+        }
+    ]
+    map.setMapStyle({styleJson:styleJson});
+    for(var i =0; i < pointList.length; i++){
+        var pointAr = pointList[i];
+        var poi =new BMap.Point(pointAr.lon,pointAr.lat);
+        var marker = new BMap.Marker(poi);  // 创建标注
+        map.addOverlay(marker);               // 将标注添加到地图中
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        marker.addEventListener("click", function(){
+            this.openInfoWindow(infoWindow);
+            //图片加载完毕重绘infowindow
+           /* document.getElementById('imgDemo').onload = function (){
+                infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+            }*/
+        });
+    }
+
+
+
+    var sContent =
+            "<div style=' background-color:#0071C6; width: 290px;padding:50px 40px 40px; '>" +
+            "<div style='font-size: 20px;position: absolute;z-index: 900;width: 250px;padding: 0;color: #fff;'>厦门湖里万达广场停车场</div>" +
+            "<div style='padding: 30px 0;'>" +
+            "<div style='display: inline-block;width: 130px;text-align: center;vertical-align: top;border-right: 1px dotted #2887CF;'>" +
+            "<div style='font-size: 16px;'>停车场饱和度</div>" +
+            "<div style='font-family: 微软雅黑;font-size: 52px;height: 70px;'>3</div>" +
+            "<div style='background-color: #F3C802;'>一般</div>" +
+            "</div>" +
+            "<div style='display: inline-block;width: 145px;margin-left: -1px;text-align: center;vertical-align: top;border-left: 1px dotted #2887CF;'>" +
+            "<div style='font-size: 16px;'>空车位：</div>" +
+            "<div style='font-family: 微软雅黑;font-size: 52px;height: 70px;'>24</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>";
+    var infoWindow = new BMap.InfoWindow(sContent);
+
+
+</script>
+</body>
+</html>

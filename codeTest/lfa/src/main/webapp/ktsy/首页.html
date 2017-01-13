@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="true">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>首页</title>
+    
+<script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="knockout" src="./首页_files/knockout.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="mapping" src="./首页_files/knockout.mapping-latest.debug.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="knockvalidation" src="./首页_files/knockout.validation.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="mainViewModel" src="./首页_files/payStatistics.html.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jquery-multiselect" src="./首页_files/jquery.multiselect.min.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jquery-cookie" src="./首页_files/jquery.cookie.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jquery-json" src="./首页_files/jquery.json.min.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="css" src="./首页_files/css.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="ztree" src="./首页_files/jquery.ztree.all-3.5.min.js"></script><!--<base href="http://cloud.keytop.cn:80/console/">--><base href=".">
+<script src="./首页_files/require.js"></script>
+<script type="text/javascript" src="./首页_files/jquery.js"></script>
+<script src="./首页_files/ajax.js"></script>
+<script src="./首页_files/dialog.js"></script>
+<link rel="stylesheet" href="./首页_files/style.new.css" type="text/css" media="screen, projection">
+<link rel="stylesheet" href="./首页_files/jquery-ui.css" type="text/css">
+<link rel="stylesheet" href="./首页_files/waiting.css" type="text/css">
+<script type="text/javascript" src="./首页_files/date.js"></script>
+<script type="text/javascript" src="./首页_files/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="./首页_files/share.js"></script>
+<script type="text/javascript" src="./首页_files/optimizePopWin.js"></script>
+<script type="text/javascript" src="./首页_files/highcharts.js"></script>
+<script type="text/javascript" src="./首页_files/paging.js"></script>
+<script type="text/javascript" src="./首页_files/round-format.js"></script>
+
+<script language="javascript">
+var basePath = "http://cloud.keytop.cn:80/console/";
+var libPath = "/console/lib";
+var jsPath = "/console/js";
+var contextPath = "/console/";
+var imagePath = "/console/images/";
+var now = new Date();
+
+requirejs.config({
+    waitSeconds : 0,
+    paths: {
+        'laydate':basePath+'/laydate/laydate',
+        'text': '/console/lib/require/text',
+        'css': '/console/lib/require/css',
+        'domReady': '/console/lib/require/domReady',
+        'knockout': '/console/lib/knockout/knockout',
+        'mapping': '/console/lib/knockout/knockout.mapping-latest.debug',
+        'knockvalidation': '/console/lib/knockout/knockout.validation',
+        'jquery': '/console/lib/jquery/jquery',
+        'jquery-json': '/console/lib/jquery/jquery.json.min',
+        'jquery-cookie': '/console/lib/jquery/jquery.cookie',
+        'jquery-messager': '/console/lib/jquery/jquery.messager',
+        'ztree': '/console/lib/ztree/jquery.ztree.all-3.5.min',
+        'jquery-multiselect': '/console/js/jquery.multiselect.min',
+        'mainViewModel' : '/console/page/report/payStatistics.html.js?' + (new Date()).getTime()
+    },
+    deps: ['knockout', 'mapping','knockvalidation'],
+    callback: function (ko, mapping,knockvalidation) {
+        ko.mapping = mapping;
+        ko.validation = knockvalidation;
+    },
+    shim: {
+        'jquery-json': {
+            "deps": ['jquery'],
+            'exports':'jquery-json'
+        },
+        'jquery-cookie': {
+            "deps": ['jquery'],
+            'exports':'jquery-cookie'
+        },
+        'jquery-messager': {
+            "deps": ['jquery'],
+            'exports':'jquery-messager'
+        },
+        'jquery-multiselect':{
+            "deps": ['jquery'],
+            'exports': 'jquery-multiselect'
+        },
+        'ztree': {
+            'deps': ["jquery", "css!/console/lib/ztree/style/zTreeStyle"],
+            'exports': "ztree"
+        }
+    }
+});
+
+require(['jquery','knockout','mainViewModel'], function($,ko,mainViewModel) {
+    $(function(){
+      init($,  ko, mainViewModel);
+    });
+});
+
+function init($,ko, mainViewModel) {
+    initDialog($);
+    $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null){
+            return null;
+        }
+        else{
+            return results[1] || 0;
+        }
+    };
+
+    ko.bindingHandlers.dateString = {
+        update: function(element, valueAccessor, allBindingsAccessor, vm) {
+            var value = valueAccessor(), allBindings = allBindingsAccessor();
+            var valueUnwrapped = ko.utils.unwrapObservable(value);
+            var pattern = allBindings.format || 'yyyy-MM-dd HH:mm:ss';
+            $(element).text(new Date(valueUnwrapped).format(pattern));
+        }
+    };
+
+    ko.bindingHandlers.dateValue = {
+        update: function(element, valueAccessor, allBindingsAccessor, vm) {
+            var value = valueAccessor(), allBindings = allBindingsAccessor();
+            var valueUnwrapped = ko.utils.unwrapObservable(value);
+            var pattern = allBindings.format || 'yyyy-MM-dd HH:mm:ss';
+            $(element).val(new Date(valueUnwrapped).format(pattern));
+        }
+    };
+
+    ko.bindingHandlers.numericText = {
+        update: function(element, valueAccessor, allBindingsAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor()),
+                    precision = ko.utils.unwrapObservable(allBindingsAccessor().precision) || ko.bindingHandlers.numericText.defaultPrecision,
+                    formattedValue = value.toFixed(precision);
+
+            ko.bindingHandlers.text.update(element, function() { return formattedValue; });
+        },
+        defaultPrecision: 2
+    };
+
+    var vm = new mainViewModel();
+
+    vm.logout = function(){
+        var url = serviceRoot + "/merchantManager/logout.do";
+
+        getUrl($,url,function(result){
+            //document.location = contextPath + '/login.jsp?from=logout';
+        });
+    };
+
+    ko.applyBindings(vm, $("#mainView")[0]);
+
+    if(typeof(vm.postConstructor)=="function"){
+        vm.postConstructor();
+    }
+}
+
+function refreshGrid(){
+    try {
+        oddevenTR();
+    }
+    catch (e) {
+    }
+}
+
+function showWaiting(){
+    var waitingDiv = document.getElementById("waiting");
+    waitingDiv.style.display="block";
+}
+
+function closeWating(){
+    var waitingDiv = document.getElementById("waiting");
+    waitingDiv.style.display="none";
+
+}
+
+</script>
+    <style>
+
+        .select-span {
+            border: 1px solid #f1f1f1;
+            overflow: hidden
+        }
+
+        /* .select{margin:-2px;font-size:20px;height:30px} */
+        .index-main {
+            width: 100%;
+            margin: auto;
+            padding-top: 10px
+        }
+
+        .card-list {
+            overflow: hidden;
+            width: 90%;
+            margin: auto;
+            height: 100px
+        }
+
+        .card-list .card {
+            width: 24%;
+            height: 100%;
+            margin-right: 1%;
+            border-radius: 8px;
+            float: left
+        }
+
+        .left-box {
+            width: 80%;
+            float: left;
+        }
+
+        .right-box {
+            width: 19%;
+            float: left;
+            margin-left: 1%;
+        }
+
+        .card-1 {
+            background: #f8a232 url(images/card/ic-02.png) no-repeat 100% 50%
+        }
+
+        .card-2 {
+            background: #2f76e0 url(images/card/ic-01.png) no-repeat 100% 50%
+        }
+
+        .card-3 {
+            background: #3dbc63 url(images/card/ic-01.png) no-repeat 100% 50%
+        }
+
+        .card-4 {
+            background: #df4242 url(images/card/ic-04.png) no-repeat 100% 50%
+        }
+
+        .cardbg-1 {
+            height: 100%;
+            width: 100%
+        }
+
+        .last {
+            margin-right: 0
+        }
+
+        .width-error {
+            display: none
+        }
+
+        .index-main .h-line {
+            width: 100%;
+            height: 35px;
+            background-color: #e5e5e5;
+            margin: 20px 0 20px 0;
+            clear: both;
+            line-height: 35px;
+        }
+        .h-line .margin {
+            margin: 15px;
+        }
+
+        .index-main .h-line div {
+            margin-left: 30px;
+            font-size: 30px;
+            line-height: 45px
+        }
+
+        .index-main .h-line div span {
+            font-size: 16px
+        }
+
+        .card-body {
+            position: relative;
+            width:100%;
+            height:100%;
+        }
+
+        .card-title {
+            position: absolute;
+            color: #FFF;
+            font-size: 24px;
+            left: 10px;
+            top: 20px;
+        }
+
+        .card-number-1{
+            position: absolute;
+            left: 10px;
+            top: 55px;
+            font-size: 24px;
+            color: #fff;
+        }
+        .card-number-2{
+            position: absolute;
+            left: 55%;
+            top: 25px;
+            font-size: 24px;
+            color: #fff;
+        }
+        .card-number-3{
+            position: absolute;
+            left: 55%;
+            top: 55px;
+            font-size: 24px;
+            color: #fff;
+        }
+        .card-unit{
+            font-size: 16px;
+        }
+        .right-search-box {
+            display: inline;
+            position: absolute;
+            right: 50px;
+        }
+
+        .right-search-box ul {
+            list-style: none;
+        }
+
+        .right-search-box ul li {
+            float: left;
+            padding: 0 10px 0 10px;
+            border-right: solid 1px #CCCCCC
+        }
+
+        #container1, #container2, #container3, #container4 {
+            min-width: 200px;
+            width: 300px;
+            height: 250px
+        }
+
+        #incomeAmountReport, #plateTypeReport {
+            width: 500px;
+            height: 200px
+        }
+
+        .plan {
+            height: auto;
+        }
+        @media screen and (max-width: 1599px) {
+            .index-main .card-list {
+                height: 90px
+            }
+            .card-body {
+                position: relative;
+                width:100%;
+                height:100%;
+            }
+
+            .card-title {
+                position: absolute;
+                color: #FFF;
+                font-size: 24px;
+                left: 10px;
+                top: 20px;
+            }
+
+            .card-number-1{
+                position: absolute;
+                left: 10px;
+                top: 55px;
+                font-size: 20px;
+                color: #fff;
+            }
+            .card-number-2{
+                position: absolute;
+                left: 55%;
+                top: 25px;
+                font-size: 20px;
+                color: #fff;
+            }
+            .card-number-3{
+                position: absolute;
+                left: 55%;
+                top: 55px;
+                font-size: 20px;
+                color: #fff;
+            }
+            .card-unit{
+                font-size: 14px;
+            }
+            #container1, #container2, #container3, #container4 {
+                min-width: 200px;
+                width: 250px;
+                height: 250px
+            }
+
+            #incomeAmountReport, #plateTypeReport {
+                width: 500px;
+                height: 200px
+            }
+        }
+
+        @media screen and (max-width: 1366px) {
+            .index-main .card-list {
+                height: 90px
+            }
+            .card-body {
+                position: relative;
+                width:100%;
+                height:100%;
+            }
+
+            .card-title {
+                position: absolute;
+                color: #FFF;
+                font-size: 24px;
+                left: 10px;
+                top: 20px;
+            }
+
+            .card-number-1{
+                position: absolute;
+                left: 10px;
+                top: 55px;
+                font-size: 20px;
+                color: #fff;
+            }
+            .card-number-2{
+                position: absolute;
+                left: 55%;
+                top: 25px;
+                font-size: 20px;
+                color: #fff;
+            }
+
+
+            .card-number-3{
+                position: absolute;
+                left: 55%;
+                top: 55px;
+                font-size: 20px;
+                color: #fff;
+            }
+            .card-unit{
+                font-size: 14px;
+            }
+
+            #container1, #container2, #container3, #container4 {
+                min-width: 200px;
+                width: 200px;
+                height: 250px
+            }
+
+            #incomeAmountReport, #plateTypeReport {
+                width: 400px;
+                height: 200px
+            }
+        }
+
+        @media screen and (max-width: 1023px) {
+            .index-main .card-list {
+                height: 90px
+            }
+
+            .card-body {
+                position: relative;
+                width:100%;
+                height:100%;
+            }
+
+            .card-title {
+                position: absolute;
+                color: #FFF;
+                font-size: 18px;
+                left: 6px;
+                top: 16px;
+            }
+
+            .card-number-1{
+                position: absolute;
+                left: 6px;
+                top: 50px;
+                font-size: 18px;
+                color: #fff;
+            }
+            .card-number-2{
+                position: absolute;
+                left: 55%;
+                top: 25px;
+                font-size: 14px;
+                color: #fff;
+            }
+            .card-number-3{
+                position: absolute;
+                left: 55%;
+                top: 55px;
+                font-size: 14px;
+                color: #fff;
+            }
+            .card-unit{
+                font-size: 12px;
+            }
+
+            #container1, #container2, #container3, #container4 {
+                min-width: 200px;
+                width: 200px;
+                height: 250px
+            }
+
+            #incomeAmountReport, #plateTypeReport {
+                width: 350px;
+                height: 200px
+            }
+            .plan {
+                height: auto;
+            }
+            .index-main .h-line {
+                margin: 20px 0 20px 0;
+            }
+            .plan-main ul li {
+                margin: 4px;font-size: 12px
+            }
+        }
+
+        :not([class*=icon]):not(i):not([class*=fxfont]) {
+            font-family: "Microsoft YaHei" !important
+        }
+    </style>
+    <style type="text/css">
+        .side-bar {width: 66px;position: fixed;height: 66px;bottom: 20px;text-align:center;right: 25px;
+            background: url(images/chinaMap.png) no-repeat center;
+            }
+        .side-bar a {width: 66px;height: 66px;margin-top: 20px;font-size: 20px;text-align:center;}
+        .side-bar a:hover {}
+    </style>
+<link type="text/css" rel="stylesheet" href="./首页_files/zTreeStyle.css"></head>
+<body style="zoom: 1;">
+<div id="parkMap" style="width: 100%; height: 100%; border: 0px; text-align: center; display: none;">
+    <iframe id="mapIframe" name="mapIframe" src="./首页_files/map.html" style="height:100%;border:0px solid #ccc;padding:0px;width: 100%;"></iframe>
+</div>
+<div class="side-bar">
+    <a class=""></a>
+</div>
+<div id="moPageWrap">
+    <!--头部-->
+    <div id="moHeaderCon">
+        <!--菜单-->
+        
+
+
+
+
+<div id="menuNavWrap">
+    <ul class="dropLayer" style="margin-left: 20px;">
+
+        <li><a href="http://cloud.keytop.cn/console/page/report/payStatistics.html" class=""><img src="./首页_files/icon-menu08.png">首 页</a></li>
+        
+        <li><a href="javascript:;"><img src="./首页_files/icon-menu04.png">收费统计</a>
+            <dl class="subMenu dropAlignL">
+                <dd><a href="http://cloud.keytop.cn/console/page/report/parkDayReport.html">日报</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/report/parkMonReport.html">月报</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/report/chargeDetails.html">岗亭收费明细</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/report/abnormalDetails.html">异常放行明细</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/report/freeDetails.html">免费放行明细</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/report/vehicleDetails.html">车辆进出明细</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/report/paymentDetails.html">提前缴费明细</a></dd>
+            </dl>
+        </li>
+        
+        
+        <li><a href="http://cloud.keytop.cn/console/page/park/statistics.html"><img src="./首页_files/icon-menu07.png">车位统计</a></li>
+        
+        
+        <li><a href="javascript:;"><img src="./首页_files/icon-menu01.png">值班统计</a>
+            <dl class="subMenu dropAlignL">
+                <dd><a href="http://cloud.keytop.cn/console/page/onDuty/info.html">值班明细</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/onDuty/outReason.html">异常放行率分析</a></dd>
+            </dl>
+        </li>
+        
+        
+        <li><a href="http://cloud.keytop.cn/console/page/report/alarmReport.html"><img src="./首页_files/icon-menu02.png">告警统计</a></li>
+        
+        
+        <li><a href="javascript:;"><img src="./首页_files/icon-menu03.png">卡片管理</a>
+            <dl class="subMenu dropAlignL">
+                <dd><a href="http://cloud.keytop.cn/console/page/card/cardManager.html">卡片管理</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/card/rechargeDetail.html">充值明细</a></dd>
+            </dl>
+        </li>
+        
+        
+        <li><a href="javascript:;"><img src="./首页_files/icon-menu06.png">基础设置</a>
+            <dl class="subMenu dropAlignL">
+                <dd><a href="http://cloud.keytop.cn/console/page/user/user.html">用户管理</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/system/types.html">系统类别报表</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/system/sysOption.html">系统配置报表</a></dd>
+                
+            </dl>
+        </li>
+        
+        
+        <li><a href="javascript:;"><img src="./首页_files/icon-menu06.png">系统管理</a>
+            <dl class="subMenu dropAlignL">
+                <dd><a href="http://cloud.keytop.cn/console/page/org.html">组织机构</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/role.html">角色管理</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/userManager.html">用户管理</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/module.html">模块管理</a></dd>
+                <dd><a href="http://cloud.keytop.cn/console/page/parklot.html">车场管理</a></dd>
+            </dl>
+        </li>
+        
+    </ul>
+    <div style="position: absolute;right: 30px;font-size: 16px;color: #fff;">
+        <ul class="dropLayer" style="margin-left: 20px;">
+            <li><a href="javascript:;" class=""><img src="./首页_files/icon-menu05.png">fuan.liao&nbsp;欢迎您</a>
+                <dl class="subMenu dropAlignL">
+                    <dd><a href="http://cloud.keytop.cn/console/page/changePassWord.html">修改密码</a></dd>
+                    <dd><a href="http://cloud.keytop.cn/console/auth/logout" onclick="return confirm(&#39;真的要退出登录吗?&#39;);">退出登录</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+</div>
+</div>
+</div>
+        <!--//菜单-->
+        
+
+
+<style>
+    .box_console,.box_from,.box_to{float:left}
+    .btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border:1px solid transparent;border-radius:4px}
+    .btn-block{display:block;width:100%;margin:5px}
+    .input{display:block;width:180px;height:20px;line-height:20px}
+    .multiselect{display:block;width:183px;height:260px;margin-top:5px}
+    .box_console{width:100px;padding:0 20px 0 10px}
+</style>
+<div class="optimizeTabsPopWin" id="__dialogParkWin_" style="display: none; width: 550px; height: 400px; left: 568px; top: 157px; opacity: 1;">
+    <h5 id="__dialogParkWin_H5">
+        <a id="__cls__dialogParkWin___" class="fxfont" style="margin-top: 0px" href="javascript:;">
+            <img src="./首页_files/ClosePop.gif">
+        </a>
+        <span id="__dialogParkTitle_">筛选</span>
+    </h5>
+    <div class="noticeBox" style="padding-top: 10px">
+        <div style="text-align: center;margin:0 auto;">
+
+            <!-- content -->
+
+            <div class="popSwitchBox">
+                <div class="popTitCon">
+                    <ul class="tabTit">
+                        <li class="tabhover">按照车场筛选</li>
+                        <li class="tab">按照组织筛选</li>
+                    </ul>
+                    <div class="operateDrill">
+
+                    </div>
+                </div>
+                <div class="tabHackBox">
+                    <!-- multiSelect begin -->
+                    <div class="multiselect-box">
+                        <div class="box_from">
+                            <input type="text" name="q" class="input" placeholder="关键字搜索..."><select name="from[]" id="search" class="multiselect" size="8" multiple="multiple"><option value="1">明发国际新城</option><option value="2">育秀中心</option><option value="3">湖里万达</option><option value="7">卜蜂莲花新镇店</option><option value="8">镇海大厦</option><option value="9">鸿山二期</option><option value="11">百安居</option><option value="12">湾流域城1期</option><option value="14">卜蜂莲花浦建路店</option></select>
+                        </div>
+
+                        <div class="box_console">
+                            <button type="button" id="search_rightAll" class="btn btn-block">
+                                &gt;&gt;
+                            </button>
+                            <button type="button" id="search_rightSelected" class="btn btn-block">
+                                &gt;
+                            </button>
+                            <button type="button" id="search_leftSelected" class="btn btn-block">
+                                &lt;
+                            </button>
+                            <button type="button" id="search_leftAll" class="btn btn-block">
+                                &lt;&lt;
+                            </button>
+                        </div>
+
+                        <div class="box_to" style="margin-top: 0;">
+                            <input type="text" name="q" class="input" style="display: none;" placeholder="关键字搜索..."><select name="to[]" id="search_to" class="multiselect" size="8" multiple="multiple" style="height: 240px;"><option value="13">凯德和平广场</option><option value="16">大连水御兰庭停车场</option></select>
+                            <button type="button" id="search_SelectAllCheck" class="btn btn-block" style="margin: 10px 0 0 0;">确定选择</button>
+                        </div>
+                    </div>
+                    <!-- multiSelect end -->
+                </div>
+
+                <!-- zTree begin -->
+                <div class="tabHackBox" style="display: none;">
+                    <button type="button" id="selectConfirm" style="position: absolute; top:49px;right: 16px">确定选择</button>
+                    <div class="accTreeBox">
+
+                        <div class="accTree" style="width: 99%;height: 280px;">
+                            <div class="ztree" id="treeEl"><li id="treeEl_1" class="level0" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_1_switch" title="" class="button level0 switch roots_open" treenode_switch=""></span><span id="treeEl_1_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_1_a" class="level0" treenode_a="" onclick="" target="_blank" style="" title="全国"><span id="treeEl_1_ico" title="" treenode_ico="" class="button ico_open" style=""></span><span id="treeEl_1_span">全国</span></a><ul id="treeEl_1_ul" class="level0 line"><li id="treeEl_2" class="level1" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_2_switch" title="" class="button level1 switch center_open" treenode_switch=""></span><span id="treeEl_2_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_2_a" class="level1" treenode_a="" onclick="" target="_blank" style="" title="华北区"><span id="treeEl_2_ico" title="" treenode_ico="" class="button ico_open" style=""></span><span id="treeEl_2_span">华北区</span></a><ul id="treeEl_2_ul" class="level1 line" style=""><li id="treeEl_3" class="level2" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_3_switch" title="" class="button level2 switch bottom_open" treenode_switch=""></span><span id="treeEl_3_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_3_a" class="level2" treenode_a="" onclick="" target="_blank" style="" title="辽宁省"><span id="treeEl_3_ico" title="" treenode_ico="" class="button ico_open" style=""></span><span id="treeEl_3_span">辽宁省</span></a><ul id="treeEl_3_ul" class="level2 " style=""><li id="treeEl_4" class="level3" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_4_switch" title="" class="button level3 switch bottom_docu" treenode_switch=""></span><span id="treeEl_4_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_4_a" class="level3" treenode_a="" onclick="" target="_blank" style="" title="大连市"><span id="treeEl_4_ico" title="" treenode_ico="" class="button ico_docu" style=""></span><span id="treeEl_4_span">大连市</span></a></li></ul></li></ul></li><li id="treeEl_5" class="level1" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_5_switch" title="" class="button level1 switch center_docu" treenode_switch=""></span><span id="treeEl_5_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_5_a" class="level1" treenode_a="" onclick="" target="_blank" style="" title="华菲物业"><span id="treeEl_5_ico" title="" treenode_ico="" class="button ico_docu" style=""></span><span id="treeEl_5_span">华菲物业</span></a></li><li id="treeEl_6" class="level1" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_6_switch" title="" class="button level1 switch center_docu" treenode_switch=""></span><span id="treeEl_6_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_6_a" class="level1" treenode_a="" onclick="" target="_blank" style="" title="上海金地"><span id="treeEl_6_ico" title="" treenode_ico="" class="button ico_docu" style=""></span><span id="treeEl_6_span">上海金地</span></a></li><li id="treeEl_7" class="level1" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_7_switch" title="" class="button level1 switch center_open" treenode_switch=""></span><span id="treeEl_7_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_7_a" class="level1" treenode_a="" onclick="" target="_blank" style="" title="华东区"><span id="treeEl_7_ico" title="" treenode_ico="" class="button ico_open" style=""></span><span id="treeEl_7_span">华东区</span></a><ul id="treeEl_7_ul" class="level1 line" style=""><li id="treeEl_8" class="level2" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_8_switch" title="" class="button level2 switch bottom_open" treenode_switch=""></span><span id="treeEl_8_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_8_a" class="level2" treenode_a="" onclick="" target="_blank" style="" title="福建省"><span id="treeEl_8_ico" title="" treenode_ico="" class="button ico_open" style=""></span><span id="treeEl_8_span">福建省</span></a><ul id="treeEl_8_ul" class="level2 " style=""><li id="treeEl_9" class="level3" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_9_switch" title="" class="button level3 switch bottom_open" treenode_switch=""></span><span id="treeEl_9_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_9_a" class="level3" treenode_a="" onclick="" target="_blank" style="" title="厦门市"><span id="treeEl_9_ico" title="" treenode_ico="" class="button ico_open" style=""></span><span id="treeEl_9_span">厦门市</span></a><ul id="treeEl_9_ul" class="level3 " style=""><li id="treeEl_10" class="level4" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_10_switch" title="" class="button level4 switch center_docu" treenode_switch=""></span><span id="treeEl_10_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_10_a" class="level4" treenode_a="" onclick="" target="_blank" style="" title="湖里区"><span id="treeEl_10_ico" title="" treenode_ico="" class="button ico_docu" style=""></span><span id="treeEl_10_span">湖里区</span></a></li><li id="treeEl_11" class="level4" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_11_switch" title="" class="button level4 switch bottom_docu" treenode_switch=""></span><span id="treeEl_11_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_11_a" class="level4" treenode_a="" onclick="" target="_blank" style="" title="思明区"><span id="treeEl_11_ico" title="" treenode_ico="" class="button ico_docu" style=""></span><span id="treeEl_11_span">思明区</span></a></li></ul></li></ul></li></ul></li><li id="treeEl_12" class="level1" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_12_switch" title="" class="button level1 switch bottom_docu" treenode_switch=""></span><span id="treeEl_12_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_12_a" class="level1" treenode_a="" onclick="" target="_blank" style="" title="上海舒泊"><span id="treeEl_12_ico" title="" treenode_ico="" class="button ico_docu" style=""></span><span id="treeEl_12_span">上海舒泊</span></a></li></ul></li><li id="treeEl_13" class="level0" tabindex="0" hidefocus="true" treenode=""><span id="treeEl_13_switch" title="" class="button level0 switch bottom_docu" treenode_switch=""></span><span id="treeEl_13_check" class="button chk checkbox_false_full" treenode_check=""></span><a id="treeEl_13_a" class="level0" treenode_a="" onclick="" target="_blank" style="" title="凯德"><span id="treeEl_13_ico" title="" treenode_ico="" class="button ico_docu" style=""></span><span id="treeEl_13_span">凯德</span></a></li></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- zTree end -->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    
+    function reloadSelectPark() {
+        postJSON($, basePath + "auth/getSelectParkData", function (result) {
+            if(result.json.status != -1) {
+                console.info(result.json);
+                if(result.json.resource.parkFlag == "0" && result.json.resource.lotCode != "all") {
+                    var selectLists = result.json.resource.parkTextBox;
+                    var selectLists2 = result.json.resource.lotCode;
+                    selectLists = selectLists.split(",");
+                    selectLists2 = selectLists2.split(",");
+                    $("#search_to").empty();
+                    if(selectLists.length > 0) {
+                        for(var i=0; i<selectLists.length; ++i){
+                            $("#search option[value='"+selectLists2[i]+"']").remove();
+                            $("#search_to").append("<option value='"+selectLists2[i]+"'>"+selectLists[i]+"</option>");
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    require(['jquery', 'knockout', 'jquery-multiselect', 'jquery-cookie', 'jquery-json', 'ztree'], function ($, ko) {
+        $(function() {
+            
+            $("#moMainBodyCon h2").append('<div style="float: left;display: inline"> <input type="text" id="parkTextBox" class="TextIn" name="parkTextBox" value="凯德和平广场,大连水御兰庭停车场" placeholder="全部车场"/><input type="hidden" id="parkAllData" name="parkAllData" style="display: none;"  value="13,16"/><input type="hidden" id="isOrgData" name="isOrgData" style="display: none;" value="0"/> <button type="button" id="parkTextBox_button" style="padding: 3px 12px;">…</button> </div>');
+            
+
+
+            $('#search').multiselect({
+                search: {
+                    left: '<input type="text" name="q" class="input" placeholder="关键字搜索..." />',
+                    right: '<input type="text" name="q" class="input" style="display: none;" placeholder="关键字搜索..." />',
+                }
+            });
+            $("#parkTextBox").on('dblclick', function(){
+                $("#__dialogParkWin_").show();
+            });
+            $("#parkTextBox_button").on('click', function(){
+                $("#__dialogParkWin_").show();
+            });
+
+            $("#search_SelectAllCheck,#__cls__dialogParkWin___").on('click', function(){
+                var treeObj = $.fn.zTree.getZTreeObj("treeEl");
+                var searchTo = $('#search_to option');
+                if(treeObj != null) {
+                    var nodes = treeObj.getCheckedNodes(true);
+                }
+                if(searchTo.length > 0){
+                    treeObj.cancelSelectedNode();
+                    confirmSelectList();
+                } else if(nodes!=null && nodes.length > 0) {
+                    getZtreeSelectNodes();
+                } else {
+                    var params = {'parkTextBox': null, 'lotCode': null, 'parkFlag': 0};
+                    postJSON($, basePath + "auth/saveParkData", function(result){
+                        if(result.json.status != -1) {
+                            $("#parkTextBox").val('');
+                            $("#parkAllData").val('');
+                            $("#isOrgData").val(0);
+                        }
+                        $("#parkTextBox").trigger("change");
+                        closePopWindow("#__popShadowBg__","#__dialogParkWin_");
+                    }, ko.toJSON(params));
+                    closePopWindow("#__popShadowBg__","#__dialogParkWin_");
+                }
+            });
+
+            $("#selectConfirm").on('click', function(){
+                getZtreeSelectNodes();
+            });
+        });
+
+        function initParkSelect(){
+            postJSON($, basePath + "auth/getParklot", function (result) {
+                if(result.json.status != -1) {
+                    $("#search").empty();
+                    for(var i=0;i< result.json.resource.length; i++) {
+                        $("#search").append( $("<option>").val(result.json.resource[i].id).text(result.json.resource[i].name) );
+                    }
+                    if(0 == 0 && "13,16" != "all") {
+                        var selectLists = "凯德和平广场,大连水御兰庭停车场";
+                        var selectLists2 = "13,16";
+                        selectLists = selectLists.split(",");
+                        selectLists2 = selectLists2.split(",");
+                        $("#search_to").empty();
+                        if(selectLists.length > 0) {
+                            for(var i=0; i<selectLists.length; ++i){
+                                $("#search option[value='"+selectLists2[i]+"']").remove();
+                                $("#search_to").append("<option value='"+selectLists2[i]+"'>"+selectLists[i]+"</option>");
+                            }
+                        }
+                    }
+
+                }
+            });
+
+        }
+        initParkSelect();
+
+        function confirmSelectList() {
+            var selectLists = new Array();
+            var searchTo = $('#search_to option');
+            if(searchTo.length <= 0){
+                closePopWindow("#__popShadowBg__","#__dialogParkWin_");
+                return;
+            }
+
+            var parkTextBox = "";
+            var lotCode = "";
+            searchTo.each(function(i, o){
+                var obj = {};
+                obj['list'] = o.text;
+                obj['value'] = o.value;
+
+                selectLists[i] = obj;
+            });
+
+            for(var i=0;i<selectLists.length; ++i) {
+                if((i+1)<selectLists.length) {
+                    parkTextBox += selectLists[i].list + ",";
+                    lotCode += selectLists[i].value + ",";
+                } else {
+                    parkTextBox += selectLists[i].list;
+                    lotCode += selectLists[i].value;
+                }
+            }
+
+            var params = {'parkTextBox': parkTextBox, 'lotCode': lotCode, 'parkFlag': 0};
+            postJSON($, basePath + "auth/saveParkData", function(result){
+                if(result.json.status != -1) {
+                    $("#parkTextBox").val(getSelectList(selectLists, 0));
+                    $("#parkAllData").val(getSelectList(selectLists, 1));
+                    $("#isOrgData").val(0);
+
+                }
+                $("#parkTextBox").trigger("change");
+                closePopWindow("#__popShadowBg__","#__dialogParkWin_");
+            }, ko.toJSON(params));
+
+        }
+
+        function getSelectList(lists, ty) {
+            if(lists == undefined && lists == null) {
+                lists = $.parseJSON($.cookie("__selectLists"));
+            }
+
+            var selList = '';
+            if(ty == 1) {
+                for(var i=0; i<lists.length; ++i) {
+                    if((i+1) < lists.length) {
+                        selList += lists[i].value + ",";
+                    } else {
+                        selList += lists[i].value;
+                    }
+                }
+            } else {
+                for(var i=0; i<lists.length; ++i) {
+                    if((i+1) < lists.length) {
+                        selList += lists[i].list + ",";
+                    } else {
+                        selList += lists[i].list;
+                    }
+                }
+            }
+            return selList;
+        }
+        // 初始化ztree树形控件设置
+
+        var ztreeSetting = {
+            edit: {
+                showRemoveBtn: true,
+                showRenameBtn: true,
+                removeTitle: "remove",
+                renameTitle: "rename",
+                drag: {
+                    isMove: true,
+                    prev: true,
+                    inner: true,
+                    next: true
+                }
+            },
+            check: {
+                enable: true,
+                chkboxType:{"Y" : "ps", "N" : "ps" }// 同时保存父与子节点
+            },
+            data: {
+                key: {
+                    checked: "checked",
+                    name: "name"
+                },
+                simpleData: { // 菜单数据量小，使用simpleData让ztree自动处理节点层级关系
+                    enable: true,
+                    idKey:"id",
+                    pIdKey:"pid"
+                }
+
+            }
+        };
+
+        function showZtree() {
+            postJSON($, basePath + "org/queryOrgList",function(result){
+                if(result.json.status != -1){
+                    $.fn.zTree.init($("#treeEl"), ztreeSetting, result.json.resource);
+                    ztreeObj = $.fn.zTree.getZTreeObj("treeEl");
+                    ztreeObj.expandAll(true);
+                }
+            });
+        };
+        showZtree();
+
+        function getZtreeSelectNodes() {
+            var treeObj = $.fn.zTree.getZTreeObj("treeEl");
+            var nodes = treeObj.getCheckedNodes(true);
+            /*
+             * check_Child_State
+             * -1	不存在子节点 或 子节点全部设置为 nocheck = true
+             *  0	无 子节点被勾选
+             *  1	部分 子节点被勾选
+             *  2	全部 子节点被勾选
+             */
+            var objs = new Array();
+            var pids = "";
+            var orgListId = "";
+            for(var i=0;i<nodes.length; ++i) {
+
+                var obj = {};
+                var node = nodes[i];
+
+                if(node.check_Child_State != 1) {
+                    obj['id'] = node.id;
+                    obj['pid'] = node.pid;
+                    objs.push(obj);
+
+                    if((i+1) < nodes.length) {
+                        orgListId += node.id + ",";
+                    } else {
+                        orgListId += node.id;
+                    }
+                }
+            }
+
+            /*
+             * check_Child_State
+             * -1	不存在子节点 或 子节点全部设置为 nocheck = true
+             *  0	无 子节点被勾选
+             *  1	部分 子节点被勾选
+             *  2	全部 子节点被勾选
+             * checked boolean  true/false
+             */
+
+            // 保存列表
+            var saveList = [];
+            // 过滤列表
+            var filterList = [];
+            var filterPidList = [];
+
+            for(var i=0; i<nodes.length; ++i) {
+                var node = nodes[i];
+                if(node.check_Child_State == -1) {
+
+                    var fatNode = searchNode(node.pid);
+                    if(fatNode == null || fatNode.check_Child_State != 2) {
+                        filterList.push(node.id);
+                        filterPidList.push(node.pid);
+                    } else {
+                        // console.info("-1 父节点完全勾选，不显示子节点");
+                    }
+                    // console.log("检测到pId:" + node.pId);
+                }
+                else if(node.check_Child_State == 0) {
+                    saveList.push(node.name);
+                }
+                else if(node.check_Child_State == 1) {
+                    filterPidList.push(node.id);
+                }
+                else if(node.check_Child_State == 2) {
+                    var fatNode = searchNode(node.pid);
+                    if(fatNode == null || fatNode.check_Child_State != 2) {
+                        saveList.push(node.name);
+                    } else if(fatNode.check_Child_State == 2) {
+                        // console.info("2 父节点完全勾选，不显示子节点");
+                    }
+                }
+            }
+
+            if(filterList != null && filterList.length >0) {
+                for(var j=0; j<filterList.length; ++j) {
+                    var node = searchNode(filterList[j]);
+                    // console.log(node);
+                    saveList.push(node.name);
+                }
+            }
+
+            /*
+             for(var i=0;i<nodes.length; ++i) {
+             var node = nodes[i];
+             var reg = new RegExp("(" + node.name + "\,|"+node.name+")","gmi");
+             if(node.check_Child_State == 1) {
+
+             var index = names.indexOf(node.name);
+             if(index > -1) {
+             names.splice(index, 1);
+             }
+             }
+             }
+             */
+
+            var orgName = saveList.join(",");
+            var params = {'parkTextBox': orgName, 'lotCode': orgListId, 'parkFlag': 1};
+            postJSON($, basePath + "auth/saveParkData", function(result){
+                if(result.json.status != -1) {
+                    $("#parkTextBox").val(orgName);
+                    $("#parkAllData").val(orgListId);
+                    $("#isOrgData").val(1);
+                    $("#parkTextBox").trigger("change");
+                }
+
+                closePopWindow("#__popShadowBg__","#__dialogParkWin_");
+            }, ko.toJSON(params));
+        }
+
+        function searchNode(id) {
+            var treeObj2 = $.fn.zTree.getZTreeObj('treeEl');
+            var node = treeObj2.getNodeByParam("id", id, null);
+            return node;
+        }
+
+        function checkZtreeObj(pid) {
+            var treeObj = $.fn.zTree.getZTreeObj("treeEl");
+            var nodeTemp = treeObj.getNodeByParam("pid", pid, null);
+            if(nodeTemp != null)
+                return nodeTemp;
+            return null;
+
+            /*
+             if(objs.indexOf({'name': nodeTemp.name, 'id': nodeTemp.id}) <= -1) {
+             obj['name'] = node.name;
+             obj['id'] = node.id;
+             objs.push(obj);
+             }
+
+             */
+        }
+
+        /**
+         * 取得全局车场查询条件参数
+         * 如果为空或者全部车场，则返回 null
+         * @returns {obj}  [ boolean, dataList]
+         */
+        function getAllParkParams() {
+            var selectLists = $.cookie("__selectLists");
+            var selectOrg = $.cookie("__selectOrg");
+            if(selectLists != null && selectLists != undefined && selectLists != '') {
+                selectLists = $.parseJSON(selectLists);
+                var params = new Array();
+                if(selectOrg != null && selectOrg != undefined && selectOrg=='1') { // 如果选择的是组织
+                    params.push(true);
+                    var data = new Array();
+                    for(var i=0;i<selectLists.length; ++i){
+                        data.push(selectLists[i].id);
+                    }
+                    params.push(data);
+                } else { // 选的是车场
+                    params.push(false);
+                    var data = new Array();
+                    for(var i=0;i<selectLists.length; ++i){
+                        data.push(selectLists[i].value);
+                    }
+                    params.push(data);
+                }
+
+
+            } else {
+                return null;
+            }
+        }
+
+
+
+    });
+</script>
+    
+    <!--//头部-->
+    <!--内容-->
+    <div id="mainView">
+        <div id="moMainBodyCon" style="width: 1366px; height: 544px;">
+            <!--导航条-->
+            <h2 style="line-height: 26px;">
+                <span class="select-span" style="margin-left: 30px;display: none">
+                    <select id="lotInfo" class="select" style="margin:-2px;font-size:20px;height:30px" data-bind="click: query">
+                        <option value="all" selected="selected">全部车场</option>
+                    <option value="1">明发国际新城</option><option value="2">育秀中心</option><option value="3">湖里万达</option><option value="7">卜蜂莲花新镇店</option><option value="8">镇海大厦</option><option value="9">鸿山二期</option><option value="11">百安居</option><option value="12">湾流域城1期</option><option value="13">凯德和平广场</option><option value="14">卜蜂莲花浦建路店</option><option value="16">大连水御兰庭停车场</option></select>
+                </span>
+                
+                    
+                
+                <div class="right-search-box">
+                    <div class="operateDrill">
+                        <ul class="tabTit">
+                            <li onclick="queryData(0)" class="tabhover">一天</li>
+                            <li onclick="queryData(7)">一周</li>
+                            <li onclick="queryData(30)">一个月</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+            <div style="float: left;display: inline"> <input type="text" id="parkTextBox" class="TextIn" name="parkTextBox" value="凯德和平广场,大连水御兰庭停车场" placeholder="全部车场"><input type="hidden" id="parkAllData" name="parkAllData" style="display: none;" value="13,16"><input type="hidden" id="isOrgData" name="isOrgData" style="display: none;" value="0"> <button type="button" id="parkTextBox_button" style="padding: 3px 12px;">…</button> </div></h2>
+            <!--//导航条-->
+            <div class="index-main">
+                <div class="left-box">
+                    <div class="width-error">Screen width is too small</div>
+                    <div class="card-list">
+                        <div class="card card-1">
+                            <div class="card-body">
+                                <div class="card-title">总车辆</div>
+                                <div class="card-number-1"><span data-bind="text: totalVehicle">1357</span><span class="card-unit">辆</span></div>
+                                <div class="card-number-2"><span data-bind="text: totalVehicleC">同比下降</span><span class="card-unit"></span></div>
+                                <div class="card-number-3"><span class="card-unit" id="totalVehicleT">↓</span><span data-bind="text: totalVehicleCom">0.22</span>%</div>
+                            </div>
+                        </div>
+                        <div class="card card-2">
+                            <div class="card-body">
+                                <div class="card-title">总收入</div>
+                                <div class="card-number-1"><span data-bind="text: chargeTotalMoney">7712</span><span class="card-unit">元</span></div>
+                                <div class="card-number-2"><span data-bind="text: chargeTotalMoneyC">同比下降</span><span class="card-unit"></span></div>
+                                <div class="card-number-3"><span class="card-unit" id="chargeTotalMoneyT">↓</span><span data-bind="text: chargeTotalMoneyCom">1.59</span>%</div>
+                            </div>
+                        </div>
+                        <div class="card card-3">
+                            <div class="card-body">
+                                <div class="card-title">平均收费</div>
+                                <div class="card-number-1"><span data-bind="text: avgChargemoney">7.3</span><span class="card-unit">元/辆</span></div>
+                                <div class="card-number-2"><span data-bind="text: avgChargemoneyC">同比上升</span><span class="card-unit"></span></div>
+                                <div class="card-number-3"><span class="card-unit" id="avgChargemoneyT">↑</span><span data-bind="text: avgChargemoneyCom">0.27</span>%</div>
+                            </div>
+                        </div>
+                        <div class="card card-4 last">
+                            <div class="card-body">
+                                <div class="card-title">异常车</div>
+                                <div class="card-number-1"><span data-bind="text: abnormalPass">0</span><span class="card-unit">辆</span></div>
+                                <div class="card-number-2"><span data-bind="text: abnormalPassC">与同期持平</span><span class="card-unit"></span></div>
+                                <div class="card-number-3"><span class="card-unit" id="abnormalPassT"></span><span data-bind="text: abnormalPassCom">0</span>%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="h-line"><h1 style="margin: 15px">车场动态</h1></div>
+                    </div>
+                    <div class="pit" style="width:100%">
+                        <table align="center" width="100%">
+                            <tbody><tr align="center">
+                                <td>
+                                    <div id="container1" data-highcharts-chart="12"><div class="highcharts-container" id="highcharts-28" style="position: relative; overflow: hidden; width: 200px; height: 250px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: &#39;Lucida Grande&#39;, &#39;Lucida Sans Unicode&#39;, Verdana, Arial, Helvetica, sans-serif; font-size: 12px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="250"><desc>Created with Highcharts 3.0.7</desc><defs><clippath id="highcharts-29"><rect fill="none" x="0" y="0" width="180" height="157"></rect></clippath></defs><rect rx="5" ry="5" fill="#FFFFFF" x="0" y="0" width="200" height="250"></rect><g class="highcharts-series-group" zIndex="3"><g class="highcharts-series highcharts-tracker" visibility="visible" zIndex="0.1" transform="translate(10,40) scale(1 1)" style="cursor:pointer;"><path fill="#2f77e0" d="M 89.98604838554688 10.000001420785026 A 68.5 68.5 0 1 1 31.261306255023058 43.25775465249402 L 64.91814902130547 63.45130399394817 A 29.25 29.25 0 1 0 89.99404255879192 49.250000606685575 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#df4242" d="M 31.29657786384128 43.19903358966004 A 68.5 68.5 0 0 1 89.90485487424209 10.000066077367308 L 89.95937233681141 49.25002821551816 A 29.25 29.25 0 0 0 64.93321025572784 63.42622967149717 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path></g><g class="highcharts-markers" visibility="visible" zIndex="0.1" transform="translate(10,40) scale(1 1)"></g></g><text x="100" y="25" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#000;font:bold 16px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" class="highcharts-title" zIndex="4"><tspan x="100">总收入构成</tspan></text><g class="highcharts-legend" zIndex="7" transform="translate(19,207)"><rect rx="0" ry="0" fill="none" x="0.5" y="0.5" width="161" height="27" visibility="visible"></rect><g zIndex="1"><g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,3)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">现金缴费</tspan></text><rect rx="2" ry="2" fill="#2f77e0" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(85,3)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">提前缴费</tspan></text><rect rx="2" ry="2" fill="#df4242" x="0" y="4" width="16" height="12" zIndex="3"></rect></g></g></g></g><g class="highcharts-tooltip" zIndex="8" style="cursor:default;padding:0;white-space:nowrap;" transform="translate(0,-999)"><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="rgb(0,0,0)" x="0" y="0" width="16" height="16" fill-opacity="0.7"></rect><text x="8" y="21" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#F2F2F2;fill:#F2F2F2;" zIndex="1"></text></g><text x="190" y="245" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:#909090;fill:#909090;" text-anchor="end" zIndex="8"></text></svg></div></div>
+                                </td>
+                                <td>
+                                    <div id="container2" data-highcharts-chart="14"><div class="highcharts-container" id="highcharts-32" style="position: relative; overflow: hidden; width: 200px; height: 250px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: &#39;Lucida Grande&#39;, &#39;Lucida Sans Unicode&#39;, Verdana, Arial, Helvetica, sans-serif; font-size: 12px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="250"><desc>Created with Highcharts 3.0.7</desc><defs><clippath id="highcharts-33"><rect fill="none" x="0" y="0" width="180" height="157"></rect></clippath></defs><rect rx="5" ry="5" fill="#FFFFFF" x="0" y="0" width="200" height="250"></rect><g class="highcharts-series-group" zIndex="3"><g class="highcharts-series highcharts-tracker" visibility="visible" zIndex="0.1" transform="translate(10,40) scale(1 1)" style="cursor:pointer;"><path fill="#2f77e0" d="M 89.98604838554688 10.000001420785026 A 68.5 68.5 0 0 1 95.9380859640743 10.25786393229427 L 92.5356060503529 49.36010978130814 A 29.25 29.25 0 0 0 89.99404255879192 49.250000606685575 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#df4242" d="M 96.00632511972557 10.263836138333843 A 68.5 68.5 0 1 1 89.90485487424209 10.000066077367308 L 89.95937233681141 49.25002821551816 A 29.25 29.25 0 1 0 92.56474466791201 49.36265995687978 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path></g><g class="highcharts-markers" visibility="visible" zIndex="0.1" transform="translate(10,40) scale(1 1)"></g></g><text x="100" y="25" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#000;font:bold 16px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" class="highcharts-title" zIndex="4"><tspan x="100">车流量构成</tspan></text><g class="highcharts-legend" zIndex="7" transform="translate(31,207)"><rect rx="0" ry="0" fill="none" x="0.5" y="0.5" width="137" height="27" visibility="visible"></rect><g zIndex="1"><g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,3)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">固定车</tspan></text><rect rx="2" ry="2" fill="#2f77e0" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(73,3)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">临时车</tspan></text><rect rx="2" ry="2" fill="#df4242" x="0" y="4" width="16" height="12" zIndex="3"></rect></g></g></g></g><g class="highcharts-tooltip" zIndex="8" style="cursor:default;padding:0;white-space:nowrap;" transform="translate(0,-999)"><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="rgb(0,0,0)" x="0" y="0" width="16" height="16" fill-opacity="0.7"></rect><text x="8" y="21" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#F2F2F2;fill:#F2F2F2;" zIndex="1"></text></g><text x="190" y="245" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:#909090;fill:#909090;" text-anchor="end" zIndex="8"></text></svg></div></div>
+                                </td>
+                                <td>
+                                    <div id="container3" data-highcharts-chart="13"><div class="highcharts-container" id="highcharts-30" style="position: relative; overflow: hidden; width: 200px; height: 250px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: &#39;Lucida Grande&#39;, &#39;Lucida Sans Unicode&#39;, Verdana, Arial, Helvetica, sans-serif; font-size: 12px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="250"><desc>Created with Highcharts 3.0.7</desc><defs><clippath id="highcharts-31"><rect fill="none" x="0" y="0" width="180" height="123"></rect></clippath></defs><rect rx="5" ry="5" fill="#FFFFFF" x="0" y="0" width="200" height="250"></rect><g class="highcharts-series-group" zIndex="3"><g class="highcharts-series highcharts-tracker" visibility="visible" zIndex="0.1" transform="translate(10,40) scale(1 1)" style="cursor:pointer;"><path fill="#2f77e0" d="M 89.98951083000969 10.00000106818144 A 51.5 51.5 0 0 1 139.42257511185616 75.97960874170765 L 109.91297929264107 67.33401711437735 A 20.75 20.75 0 0 0 89.99577378102333 40.75000043038378 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#df4242" d="M 139.40807079424224 76.02902406877864 A 51.5 51.5 0 0 1 79.96021636220812 112.01190695772954 L 85.95484445661783 81.851884842192 A 20.75 20.75 0 0 0 109.90713532001021 67.35392717334285 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#f7a332" d="M 79.90970948356045 112.00184191981367 A 51.5 51.5 0 0 1 72.17691358117689 13.182429795082172 L 82.81885353028001 42.03224113102826 A 20.75 20.75 0 0 0 85.93449459774523 81.84782951138124 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#3dbc63" d="M 72.22524005487136 13.164630870416943 A 51.5 51.5 0 0 1 89.9284675331893 10.000049678604618 L 89.97117866628501 40.750020016136816 A 20.75 20.75 0 0 0 82.8383248764773 42.02506971963401 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path></g><g class="highcharts-markers" visibility="visible" zIndex="0.1" transform="translate(10,40) scale(1 1)"></g></g><text x="100" y="25" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#000;font:bold 16px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" class="highcharts-title" zIndex="4"><tspan x="100">停车时长分布</tspan></text><g class="highcharts-legend" zIndex="7" transform="translate(13,173)"><rect rx="0" ry="0" fill="none" x="0.5" y="0.5" width="173" height="61" visibility="visible"></rect><g zIndex="1"><g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,3)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">小于30分钟</tspan></text><rect rx="2" ry="2" fill="#2f77e0" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,20)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">30~60分钟</tspan></text><rect rx="2" ry="2" fill="#df4242" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(98,20)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">1~3小时</tspan></text><rect rx="2" ry="2" fill="#f7a332" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,37)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">3小时以上</tspan></text><rect rx="2" ry="2" fill="#3dbc63" x="0" y="4" width="16" height="12" zIndex="3"></rect></g></g></g></g><g class="highcharts-tooltip" zIndex="8" style="cursor:default;padding:0;white-space:nowrap;" transform="translate(0,-999)"><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="rgb(0,0,0)" x="0" y="0" width="16" height="16" fill-opacity="0.7"></rect><text x="8" y="21" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#F2F2F2;fill:#F2F2F2;" zIndex="1"></text></g><text x="190" y="245" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:#909090;fill:#909090;" text-anchor="end" zIndex="8"></text></svg></div></div>
+                                </td>
+                                <td>
+                                    <div id="container4" data-highcharts-chart="15"><div class="highcharts-container" id="highcharts-34" style="position: relative; overflow: hidden; width: 200px; height: 250px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: &#39;Lucida Grande&#39;, &#39;Lucida Sans Unicode&#39;, Verdana, Arial, Helvetica, sans-serif; font-size: 12px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="250"><desc>Created with Highcharts 3.0.7</desc><defs><clippath id="highcharts-35"><rect fill="none" x="0" y="0" width="180" height="106"></rect></clippath></defs><rect rx="5" ry="5" fill="#FFFFFF" x="0" y="0" width="200" height="250"></rect><g class="highcharts-series-group" zIndex="3"><g class="highcharts-series highcharts-tracker" visibility="visible" zIndex="0.1" transform="translate(10,40) scale(1 1)" style="cursor:pointer;"><path fill="#2f77e0" d="M 89.9912420522411 10.000000891879651 A 43 43 0 0 1 132.70098120316538 47.93776686758528 L 106.3852602291216 51.05751519337575 A 16.5 16.5 0 0 0 89.99663939213903 36.50000034223289 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#df4242" d="M 132.70602208496527 47.98047037278797 A 43 43 0 0 1 107.52570233264979 92.26639476380986 L 96.72497880206329 68.06733752564797 A 16.5 16.5 0 0 0 106.38719452097504 51.073901422116315 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#f7a332" d="M 107.48642718157994 92.2839008300258 A 43 43 0 0 1 48.05912148794251 43.5151325978254 L 73.90640708258259 49.36045785730509 A 16.5 16.5 0 0 0 96.70990810455974 68.07405496966106 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#3dbc63" d="M 48.06862732420139 43.473196468736795 A 43 43 0 0 1 86.37557930566511 10.153021406049213 L 88.60923391961568 36.5587175162747 A 16.5 16.5 0 0 0 73.91005467091449 49.344366086840864 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path><path fill="#24CBE5" d="M 86.4184280893281 10.149418409446461 A 43 43 0 0 1 89.94027386266292 10.000041479223277 L 89.97708183102182 36.500015916446145 A 16.5 16.5 0 0 0 88.62567589474219 36.557334971066666 Z" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round" transform="translate(0,0)"></path></g><g class="highcharts-markers" visibility="visible" zIndex="0.1" transform="translate(10,40) scale(1 1)"></g></g><text x="100" y="25" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#000;font:bold 16px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" class="highcharts-title" zIndex="4"><tspan x="100">收费金额段分布</tspan></text><g class="highcharts-legend" zIndex="7" transform="translate(16,156)"><rect rx="0" ry="0" fill="none" x="0.5" y="0.5" width="167" height="78" visibility="visible"></rect><g zIndex="1"><g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,3)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">收费0元</tspan></text><rect rx="2" ry="2" fill="#2f77e0" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(80,3)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">收费0~5元</tspan></text><rect rx="2" ry="2" fill="#df4242" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,20)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">收费5~10元</tspan></text><rect rx="2" ry="2" fill="#f7a332" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,37)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">收费10~20元</tspan></text><rect rx="2" ry="2" fill="#3dbc63" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,54)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">收费20元以上</tspan></text><rect rx="2" ry="2" fill="#24CBE5" x="0" y="4" width="16" height="12" zIndex="3"></rect></g></g></g></g><g class="highcharts-tooltip" zIndex="8" style="cursor:default;padding:0;white-space:nowrap;" transform="translate(0,-999)"><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="rgb(0,0,0)" x="0" y="0" width="16" height="16" fill-opacity="0.7"></rect><text x="8" y="21" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#F2F2F2;fill:#F2F2F2;" zIndex="1"></text></g><text x="190" y="245" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:#909090;fill:#909090;" text-anchor="end" zIndex="8"></text></svg></div></div>
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+                    <div>
+                        <div class="h-line"><h1 style="margin: 15px">信息对比</h1></div>
+                    </div>
+                    <div class="pit" style="width:100%;margin: auto;">
+                        <table align="center" width="100%">
+                            <tbody><tr align="center">
+                                <td>
+                                    <div id="incomeAmountReport" data-highcharts-chart="16"><div class="highcharts-container" id="highcharts-36" style="position: relative; overflow: hidden; width: 400px; height: 200px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: &#39;Lucida Grande&#39;, &#39;Lucida Sans Unicode&#39;, Verdana, Arial, Helvetica, sans-serif; font-size: 12px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="400" height="200"><desc>Created with Highcharts 3.0.7</desc><defs><clippath id="highcharts-37"><rect fill="none" x="0" y="0" width="331" height="158"></rect></clippath></defs><rect rx="5" ry="5" fill="#FFFFFF" x="0" y="0" width="400" height="200"></rect><rect rx="0" ry="0" fill="none" x="59" y="10" width="331" height="158" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="59" y="10" width="331" height="158" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="59" y="10" width="331" height="158" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="rgb(255, 255, 255)" x="59" y="10" width="331" height="158"></rect><g class="highcharts-grid" zIndex="1"><path fill="none" d="M 124.5 10 L 124.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 157.5 10 L 157.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 190.5 10 L 190.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 224.5 10 L 224.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 257.5 10 L 257.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 290.5 10 L 290.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 323.5 10 L 323.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 356.5 10 L 356.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 390.5 10 L 390.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 91.5 10 L 91.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 58.5 10 L 58.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1"></path></g><g class="highcharts-grid" zIndex="1"><path fill="none" d="M 59 168.5 L 390 168.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 152.5 L 390 152.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 136.5 L 390 136.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 121.5 L 390 121.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 105.5 L 390 105.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 89.5 L 390 89.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 73.5 L 390 73.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 57.5 L 390 57.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 42.5 L 390 42.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 26.5 L 390 26.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 9.5 L 390 9.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 89.5 L 390 89.5" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 59 9.5 L 390 9.5" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 59 168.5 L 390 168.5" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path></g><rect rx="0" ry="0" fill="none" x="58.5" y="9.5" width="332" height="159" stroke="#C0C0C0" stroke-width="1" zIndex="1"></rect><g class="highcharts-axis" zIndex="2"><path fill="none" d="M 124.5 168 L 124.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 157.5 168 L 157.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 190.5 168 L 190.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 224.5 168 L 224.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 257.5 168 L 257.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 290.5 168 L 290.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 323.5 168 L 323.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 356.5 168 L 356.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 390.5 168 L 390.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 91.5 168 L 91.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 58.5 168 L 58.5 173" stroke="#000" stroke-width="1"></path><path fill="none" d="M 59 168.5 L 390 168.5" stroke="#000" stroke-width="1" zIndex="7" visibility="visible"></path></g><g class="highcharts-axis" zIndex="2"><path fill="none" d="M 59 89.5 L 54 89.5" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 9.5 L 54 9.5" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 59 168.5 L 54 168.5" stroke="#000" stroke-width="1" opacity="1"></path><text x="27" y="89" style="font-family:&quot;微软雅黑&quot;, Verdana, sans-serif;font-size:12px;color:#333;font-weight:bold;fill:#333;" zIndex="7" text-anchor="middle" transform="translate(0,0) rotate(270 27 89)" visibility="visible"><tspan x="27">总收入（元）</tspan></text><path fill="none" d="M 58.5 10 L 58.5 168" stroke="#000" stroke-width="1" zIndex="7" visibility="visible"></path></g><g class="highcharts-series-group" zIndex="3"><g class="highcharts-series" visibility="visible" zIndex="0.1" transform="translate(59,10) scale(1 1)" clip-path="url(http://cloud.keytop.cn/console/page/report/payStatistics.html#highcharts-37)"><path fill="none" d="M 16.55 158 L 49.650000000000006 157.368 L 82.75 151.601 L 115.85000000000001 135.327 L 148.95000000000002 108.0325 L 182.05 44.1215 L 215.15000000000003 17.459000000000003 L 248.25000000000003 81.212 L 281.35 81.4095 L 314.45000000000005 134.3" stroke="#2f77e0" stroke-width="2" zIndex="1" stroke-linejoin="round" stroke-linecap="round"></path><path fill="none" d="M 6.550000000000001 158 L 16.55 158 L 49.650000000000006 157.368 L 82.75 151.601 L 115.85000000000001 135.327 L 148.95000000000002 108.0325 L 182.05 44.1215 L 215.15000000000003 17.459000000000003 L 248.25000000000003 81.212 L 281.35 81.4095 L 314.45000000000005 134.3 L 324.45000000000005 134.3" stroke-linejoin="round" visibility="visible" stroke-opacity="0.0001" stroke="rgb(192,192,192)" stroke-width="22" zIndex="2" class=" highcharts-tracker" style=""></path></g><g class="highcharts-markers highcharts-tracker" visibility="visible" zIndex="0.1" transform="translate(59,10) scale(1 1)" clip-path="none" style=""><path fill="#2f77e0" d="M 314 130.3 C 319.328 130.3 319.328 138.3 314 138.3 C 308.672 138.3 308.672 130.3 314 130.3 Z"></path><path fill="#2f77e0" d="M 281 77.4095 C 286.328 77.4095 286.328 85.4095 281 85.4095 C 275.672 85.4095 275.672 77.4095 281 77.4095 Z"></path><path fill="#2f77e0" d="M 248 77.212 C 253.328 77.212 253.328 85.212 248 85.212 C 242.672 85.212 242.672 77.212 248 77.212 Z"></path><path fill="#2f77e0" d="M 215 13.459000000000003 C 220.328 13.459000000000003 220.328 21.459000000000003 215 21.459000000000003 C 209.672 21.459000000000003 209.672 13.459000000000003 215 13.459000000000003 Z"></path><path fill="#2f77e0" d="M 182 40.1215 C 187.328 40.1215 187.328 48.1215 182 48.1215 C 176.672 48.1215 176.672 40.1215 182 40.1215 Z"></path><path fill="#2f77e0" d="M 148 104.0325 C 153.328 104.0325 153.328 112.0325 148 112.0325 C 142.672 112.0325 142.672 104.0325 148 104.0325 Z"></path><path fill="#2f77e0" d="M 115 131.327 C 120.328 131.327 120.328 139.327 115 139.327 C 109.672 139.327 109.672 131.327 115 131.327 Z"></path><path fill="#2f77e0" d="M 82 147.601 C 87.328 147.601 87.328 155.601 82 155.601 C 76.672 155.601 76.672 147.601 82 147.601 Z"></path><path fill="#2f77e0" d="M 49 153.368 C 54.328 153.368 54.328 161.368 49 161.368 C 43.672 161.368 43.672 153.368 49 153.368 Z"></path><path fill="#2f77e0" d="M 16 154 C 21.328 154 21.328 162 16 162 C 10.672 162 10.672 154 16 154 Z"></path></g></g><g class="highcharts-legend" zIndex="7" transform="translate(293,10)"><g zIndex="1"><g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,3)"><path fill="none" d="M 0 11 L 16 11" stroke="#2f77e0" stroke-width="2"></path><path fill="#2f77e0" d="M 8 7 C 13.328 7 13.328 15 8 15 C 2.6719999999999997 15 2.6719999999999997 7 8 7 Z"></path><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">收费金额</tspan></text></g></g></g></g><g class="highcharts-axis-labels" zIndex="7"><text x="75.55" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="75.55">00</tspan></text><text x="108.65" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="108.65">08</tspan></text><text x="141.75" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="141.75">09</tspan></text><text x="174.85" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="174.85">10</tspan></text><text x="207.95000000000002" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="207.95000000000002">11</tspan></text><text x="241.05" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="241.05">12</tspan></text><text x="274.15000000000003" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="274.15000000000003">13</tspan></text><text x="307.25" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="307.25">14</tspan></text><text x="340.35" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="340.35">15</tspan></text><text x="373.45" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="373.45">16</tspan></text></g><g class="highcharts-axis-labels" zIndex="7"><text x="51" y="172.5" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="end" opacity="1"><tspan x="51">0k</tspan></text><text x="51" y="93.5" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="end" opacity="1"><tspan x="51">1k</tspan></text><text x="51" y="14.5" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="end" opacity="1"><tspan x="51">2k</tspan></text></g><g class="highcharts-tooltip" zIndex="8" style="cursor:default;padding:0;white-space:nowrap;" transform="translate(0,-999)"><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="rgb(0,0,0)" x="0" y="0" width="16" height="16" fill-opacity="0.7"></rect><text x="8" y="21" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#F2F2F2;fill:#F2F2F2;" zIndex="1"></text></g><text x="390" y="195" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:#909090;fill:#909090;" text-anchor="end" zIndex="8"></text></svg></div></div>
+                                </td>
+                                <td>
+                                    <div id="plateTypeReport" data-highcharts-chart="17"><div class="highcharts-container" id="highcharts-40" style="position: relative; overflow: hidden; width: 400px; height: 200px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); font-family: &#39;Lucida Grande&#39;, &#39;Lucida Sans Unicode&#39;, Verdana, Arial, Helvetica, sans-serif; font-size: 12px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="400" height="200"><desc>Created with Highcharts 3.0.7</desc><defs><clippath id="highcharts-41"><rect fill="none" x="0" y="0" width="351" height="158"></rect></clippath></defs><rect rx="5" ry="5" fill="#FFFFFF" x="0" y="0" width="400" height="200"></rect><rect rx="0" ry="0" fill="none" x="39" y="10" width="351" height="158" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="39" y="10" width="351" height="158" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="39" y="10" width="351" height="158" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="rgb(255, 255, 255)" x="39" y="10" width="351" height="158"></rect><g class="highcharts-grid" zIndex="1"><path fill="none" d="M 108.5 10 L 108.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 143.5 10 L 143.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 178.5 10 L 178.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 214.5 10 L 214.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 249.5 10 L 249.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 284.5 10 L 284.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 319.5 10 L 319.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 354.5 10 L 354.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 390.5 10 L 390.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 73.5 10 L 73.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 38.5 10 L 38.5 168" stroke="#C0C0C0" stroke-width="1" zIndex="1"></path></g><g class="highcharts-grid" zIndex="1"><path fill="none" d="M 39 168.5 L 390 168.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 160.5 L 390 160.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 152.5 L 390 152.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 144.5 L 390 144.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 136.5 L 390 136.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 129.5 L 390 129.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 121.5 L 390 121.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 113.5 L 390 113.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 105.5 L 390 105.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 97.5 L 390 97.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 89.5 L 390 89.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 81.5 L 390 81.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 73.5 L 390 73.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 65.5 L 390 65.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 57.5 L 390 57.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 50.5 L 390 50.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 42.5 L 390 42.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 34.5 L 390 34.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 26.5 L 390 26.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 18.5 L 390 18.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 9.5 L 390 9.5" stroke="#E0E0E0" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 129.5 L 390 129.5" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 39 89.5 L 390 89.5" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 39 50.5 L 390 50.5" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 39 9.5 L 390 9.5" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path><path fill="none" d="M 39 168.5 L 390 168.5" stroke="#C0C0C0" stroke-width="1" zIndex="1" opacity="1"></path></g><rect rx="0" ry="0" fill="none" x="38.5" y="9.5" width="352" height="159" stroke="#C0C0C0" stroke-width="1" zIndex="1"></rect><g class="highcharts-axis" zIndex="2"><path fill="none" d="M 108.5 168 L 108.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 143.5 168 L 143.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 178.5 168 L 178.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 214.5 168 L 214.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 249.5 168 L 249.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 284.5 168 L 284.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 319.5 168 L 319.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 354.5 168 L 354.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 390.5 168 L 390.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 73.5 168 L 73.5 173" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 38.5 168 L 38.5 173" stroke="#000" stroke-width="1"></path><path fill="none" d="M 39 168.5 L 390 168.5" stroke="#000" stroke-width="1" zIndex="7" visibility="visible"></path></g><g class="highcharts-axis" zIndex="2"><path fill="none" d="M 39 129.5 L 34 129.5" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 89.5 L 34 89.5" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 50.5 L 34 50.5" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 9.5 L 34 9.5" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 39 168.5 L 34 168.5" stroke="#000" stroke-width="1" opacity="1"></path><path fill="none" d="M 38.5 10 L 38.5 168" stroke="#000" stroke-width="1" zIndex="7" visibility="visible"></path></g><g class="highcharts-series-group" zIndex="3"><g class="highcharts-series highcharts-tracker" visibility="visible" zIndex="0.1" transform="translate(39,10) scale(1 1)" style="" clip-path="url(http://cloud.keytop.cn/console/page/report/payStatistics.html#highcharts-41)"><rect fill="#2f77e0" x="8.5" y="158.5" width="17" height="0" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="43.5" y="151.5" width="17" height="0" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="78.5" y="129.5" width="17" height="1" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="113.5" y="118.5" width="17" height="1" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="149.5" y="92.5" width="17" height="0" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="184.5" y="51.5" width="17" height="1" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="219.5" y="39.5" width="17" height="0" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="254.5" y="91.5" width="17" height="0" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="289.5" y="79.5" width="17" height="2" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#2f77e0" x="324.5" y="137.5" width="17" height="0" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect></g><g class="highcharts-markers" visibility="visible" zIndex="0.1" transform="translate(39,10) scale(1 1)"></g><g class="highcharts-series highcharts-tracker" visibility="visible" zIndex="0.1" transform="translate(39,10) scale(1 1)" style="" clip-path="url(http://cloud.keytop.cn/console/page/report/payStatistics.html#highcharts-41)"><rect fill="#df4242" x="8.5" y="158.5" width="17" height="0" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="43.5" y="151.5" width="17" height="7" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="78.5" y="130.5" width="17" height="28" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="113.5" y="119.5" width="17" height="39" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="149.5" y="92.5" width="17" height="66" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="184.5" y="52.5" width="17" height="106" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="219.5" y="39.5" width="17" height="119" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="254.5" y="91.5" width="17" height="67" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="289.5" y="81.5" width="17" height="77" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect><rect fill="#df4242" x="324.5" y="137.5" width="17" height="21" stroke="#FFFFFF" stroke-width="1" rx="0" ry="0"></rect></g><g class="highcharts-markers" visibility="visible" zIndex="0.1" transform="translate(39,10) scale(1 1)"></g></g><g class="highcharts-stack-labels" visibility="visible" zIndex="6" transform="translate(39,10)"><text x="18" y="152" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="18">1</tspan></text><text x="53" y="145" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="53">18</tspan></text><text x="88" y="123" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="88">73</tspan></text><text x="123" y="112" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="123">102</tspan></text><text x="158" y="86" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="158">168</tspan></text><text x="193" y="45" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="193">272</tspan></text><text x="228" y="33" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="228">302</tspan></text><text x="263" y="85" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="263">170</tspan></text><text x="298" y="73" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="298">199</tspan></text><text x="334" y="131" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:gray;cursor:default;line-height:14px;font-weight:bold;fill:gray;" text-anchor="middle" visibility="inherit" transform="translate(0,0)"><tspan x="334">52</tspan></text></g><g class="highcharts-legend" zIndex="7" transform="translate(317,10)"><rect rx="0" ry="0" fill="none" x="0.5" y="0.5" width="72" height="44" visibility="visible"></rect><g zIndex="1"><g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,3)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">固定车</tspan></text><rect rx="2" ry="2" fill="#2f77e0" x="0" y="4" width="16" height="12" zIndex="3"></rect></g><g class="highcharts-legend-item" zIndex="1" transform="translate(8,20)"><text x="21" y="15" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:black;font:9pt &quot;微软雅黑&quot;, Verdana, sans-serif;fill:black;" text-anchor="start" zIndex="2"><tspan x="21">临时车</tspan></text><rect rx="2" ry="2" fill="#df4242" x="0" y="4" width="16" height="12" zIndex="3"></rect></g></g></g></g><g class="highcharts-axis-labels" zIndex="7"><text x="56.55" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="56.55">00</tspan></text><text x="91.65" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="91.65">08</tspan></text><text x="126.75000000000001" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="126.75000000000001">09</tspan></text><text x="161.85" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="161.85">10</tspan></text><text x="196.95000000000002" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="196.95000000000002">11</tspan></text><text x="232.05" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="232.05">12</tspan></text><text x="267.15000000000003" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="267.15000000000003">13</tspan></text><text x="302.25" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="302.25">14</tspan></text><text x="337.35" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="337.35">15</tspan></text><text x="372.45" y="182" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="middle" opacity="1"><tspan x="372.45">16</tspan></text></g><g class="highcharts-axis-labels" zIndex="7"><text x="31" y="172.5" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="end" opacity="1"><tspan x="31">0</tspan></text><text x="31" y="133" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="end" opacity="1"><tspan x="31">100</tspan></text><text x="31" y="93.5" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="end" opacity="1"><tspan x="31">200</tspan></text><text x="31" y="54" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="end" opacity="1"><tspan x="31">300</tspan></text><text x="31" y="14.5" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#000;cursor:default;line-height:14px;font:11px &quot;微软雅黑&quot;, Verdana, sans-serif;fill:#000;" text-anchor="end" opacity="1"><tspan x="31">400</tspan></text></g><g class="highcharts-tooltip" zIndex="8" style="cursor:default;padding:0;white-space:nowrap;" transform="translate(0,-999)"><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="none" x="0" y="0" width="16" height="16" fill-opacity="0.7" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)"></rect><rect rx="0" ry="0" fill="rgb(0,0,0)" x="0" y="0" width="16" height="16" fill-opacity="0.7"></rect></g><text x="390" y="195" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Verdana, Arial, Helvetica, sans-serif;font-size:12px;cursor:pointer;color:#909090;fill:#909090;" text-anchor="end" zIndex="8"></text></svg><div class="highcharts-tooltip" style="position: absolute; left: 0px; top: -999px;"><span style="position: absolute; white-space: nowrap; font-family: &#39;Lucida Grande&#39;, &#39;Lucida Sans Unicode&#39;, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: rgb(242, 242, 242); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1"></span></div></div></div>
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+                </div>
+                <div class="right-box">
+                    <div class="plan">
+                        <div class="plan-header">
+                            <div class="h-line"><h1 class="margin" style="color: red">收入排名</h1></div>
+                        </div>
+                        <div class="plan-main">
+                            <table align="center" width="100%" data-bind="foreach : incomeMoneyData">
+                                <tbody><tr align="center">
+                                    <td data-bind="text: ID">排名</td><td data-bind="text: NAME">名称</td><td data-bind="text: TOTAL">总收入</td></tr>
+                            </tbody>
+                                <tbody><tr align="center">
+                                    <td data-bind="text: ID">1</td><td data-bind="text: NAME">凯德和平广场</td><td data-bind="text: TOTAL">7581</td></tr>
+                            </tbody></table>
+                        </div>
+                    </div>
+                    <div class="plan">
+                        <div class="plan-header">
+                            <div class="h-line"><h1 class="margin" style="color: red;">流量排名</h1></div>
+                        </div>
+                        <div class="plan-main">
+                            <table align="center" width="100%" data-bind="foreach : vehicleFlowData">
+                                <tbody><tr align="center">
+                                    <td data-bind="text: TOTALDESC">排名</td><td data-bind="text: NAMEDESC">最繁忙</td><td data-bind="text: TOTAASCL">排名</td><td data-bind="text: NAMEASC">最空闲</td></tr>
+                            </tbody>
+                                <tbody><tr align="center">
+                                    <td data-bind="text: TOTALDESC">1</td><td data-bind="text: NAMEDESC">凯德和平广场</td><td data-bind="text: TOTAASCL">1</td><td data-bind="text: NAMEASC">凯德和平广场</td></tr>
+                            </tbody></table>
+                        </div>
+                    </div>
+                    <div class="plan">
+                        <div class="plan-header">
+                            <div class="h-line"><h1 class="margin">警告</h1></div>
+                        </div>
+                        <div class="plan-main" style="margin-top: 10px">
+                            <div id="tips"></div>
+                            <ul data-bind="foreach : alarmData">
+                                <li style="margin: 8px;font-size: 16px">
+                                    <h data-bind="text: NAME">凯德和平广场</h>
+                                    -
+                                    <h data-bind="text: DEVICETYPE"></h>
+                                    -
+                                    <h data-bind="text: TYPENAME">自助缴费机告警</h>
+                                </li>
+                            
+                                <li style="margin: 8px;font-size: 16px">
+                                    <h data-bind="text: NAME">凯德和平广场</h>
+                                    -
+                                    <h data-bind="text: DEVICETYPE"></h>
+                                    -
+                                    <h data-bind="text: TYPENAME">自助缴费机告警</h>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+<!--//内容-->
+<!--弹窗背景-->
+<div id="popShadowBg">
+    <iframe style="width:100%; height:100%; filter:alpha(opacity=0);-moz-opacity:0"></iframe>
+</div>
+<!--弹窗背景-->
+
+<div class="optimizeTabsPopWin" id="mapPopWin">
+    <h5 id="popMapWinH5"><a id="clsmapPopWin" href="javascript:;" style="margin-top: 0;"><img src="./首页_files/ClosePop(1).gif"></a>选择车场</h5>
+    <div style="margin-left:20px;width: auto;padding: 5px;font-size:1.5em" id="mapSelect">
+        <p><span>当前选择：</span><span id="lotCode"></span><span id="lotCodeValue">-1</span>
+            <input type="button" value="查询" data-bind="click : queryMap" class="button" style="float: right">
+        </p>
+
+    </div>
+
+
+    
+        
+    
+</div>
+
+
+
+<script type="text/javascript" src="./首页_files/jquery-ui-datepicker.js"></script>
+<script type="text/javascript">
+    // å¼ºå¶å°é¡µé¢ææhref = # çè¿æ¥è½¬æ¢ä¸º javascript:; ç©ºè¿æ¥
+    jQuery(function($){
+        $("[href='#']").attr("href", "javascript:;");
+    });
+</script>
+<div class="optimizeTabsPopWin" id="__dialogPopWin_"><h5 id="__dialogPopWin_H5"><a id="__cls__dialogPopWin___" href="javascript:;"><img src="./首页_files/ClosePop(1).gif"></a><span id="__dialogTitle_">公告更新</span></h5><div class="noticeBox" id="__dialogContent__" style="padding-top: 10px"></div></div></body></html>

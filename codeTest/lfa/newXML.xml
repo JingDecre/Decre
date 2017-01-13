@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<English cat="language">
+    <lan id="1">
+        <name>Java</name>
+        <ide>IntelliJ IDEA</ide>
+    </lan>
+</English>

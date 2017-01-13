@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>list</title>
+</head>
+<body>
+<script>
+    function AD(){
+        var control = document.forms[1]['text'];
+        var Direction = control.selectionDirection;
+        alert(Direction);
+    }
+</script>
+    <form>
+        <input type="text" name="greet" list="greetings">
+        <datalist id="greetings" style="display: none">
+            <option value="Android学习">Android学习</option>
+            <option value="ios学习">ios学习</option>
+            <option value="Html5学习">Html5学习</option>
+        </datalist>
+        <br>
+        <input type="test" name="text">
+        <input type="button" value="点击我" onclick="AD()">
+    </form>
+</body>
+</html>

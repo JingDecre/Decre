@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>横向两列布局</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        #wrap {
+            background: darkgray;
+            margin: 0 auto;
+            width: 960px;
+        }
+
+        #header{
+            background: red;
+            width: 100%;
+        }
+
+        #mainbody{
+            background: yellow;
+            width: 100%;
+            overflow: hidden;
+        }
+        .left{
+            width: 800px;height: 200px;background: #000;float: left;margin-right:20px ;
+        }
+        .right{
+            width: 140px;;height: 300px;background: paleturquoise;float: right;
+        }
+        #footer{
+            background: palegreen;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div id="header">头部</div>
+    <div id="mainbody">
+        <div class="left"></div>
+        <div class="right"></div>
+    </div>
+    <div id="footer">版权部分</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" build-on-make="true" name="lfa_test:WEB exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/lfa_test_WEB_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="lfa" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="lfa/web/Web Gradle : lfa-1.0-SNAPSHOT.war" />
+    </root>
+  </artifact>
+</component>

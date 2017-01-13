@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百度旅游热点</title>
+    <style>
+        @import url('http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css');
+        @import url('http://cdn.gbtags.com/font-awesome/4.1.0/css/font-awesome.min.css');
+        @charset "UTF-8";
+        .toggle-btn, .content .detail-info .side-toggle {
+            background-color: #c54331;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            display: block;
+            height: 70px;
+            left: -16px;
+            margin-top: -35px;
+            overflow: hidden;
+            position: absolute;
+            text-decoration: none;
+            top: 50%;
+            padding-top: 20px;
+            padding-left: 2px;
+            width: 15px;
+            color: #fff;
+        }
+
+        html, body {
+            background-color: #232931;
+            color: #fff;
+            min-width: 640px;
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            font-family: Arial,"Microsoft YaHei","微软雅黑","WenQuanYi Micro Hei","文泉驿微米黑",STXihei,"华文细黑",sans-serif;
+        }
+
+        .navbar-default {
+            background-color: #0071c6;
+            border: 0;
+        }
+        .navbar-default .navbar-brand {
+            color: #5ea9e2;
+        }
+
+        .navbar-default .navbar-nav > .active > a,
+        .navbar-default .navbar-nav > .active > a:hover,
+        .navbar-default .navbar-nav > li > a:hover,
+        .navbar-default .navbar-nav > .open > a,
+        .navbar-default .navbar-nav > .open > a:focus,
+        .navbar-default .navbar-brand:hover {
+            background-color: #0461a3;
+            color: #fff;
+        }
+
+        .navbar-default .navbar-nav > li > a {
+            color: #5ea9e2;
+        }
+
+        .content {
+            margin-top: 50px;
+            position: relative;
+            height: 100%;
+        }
+        .content .map {
+            height: 90%;
+            width: 100%;
+            z-index: 1;
+        }
+        .content div.active {
+            left: 20px;
+        }
+        .content .location-detail {
+            left: -200px;
+            pointer-events: none;
+            position: absolute;
+            top: 80px;
+            z-index: 4;
+            -webkit-transition: all 1s;
+            -o-transition: all 1s;
+            -moz-transition: all 1s;
+            -ms-transition: all 1s;
+            transition: all 1s;
+        }
+        .content .location-detail .location {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-top: 3px solid #ffce4a;
+            display: inline-block;
+            line-height: 35px;
+            margin-bottom: 20px;
+            padding: 0 12px;
+        }
+        .content .location-detail .location span {
+            vertical-align: middle;
+        }
+        .content .location-detail .location-label {
+            color: #b0b8be;
+        }
+        .content .location-detail .location-name {
+            font-size: 14px;
+        }
+        .content .location-detail .number {
+            border-bottom: 1px solid #5c5c5c;
+            font-size: 42px;
+            line-height: 50px;
+            margin-bottom: 10px;
+        }
+        .content .location-detail .label {
+            border-left: 3px solid #ffce4a;
+            color: #b0b8be;
+            padding-left: 5px;
+            display: block;
+        }
+        .content .location-detail a {
+            background-color: #59677b;
+            color: #d0d9df;
+            display: block;
+            line-height: 30px;
+            margin-bottom: 10px;
+            pointer-events: auto;
+            text-align: center;
+            text-decoration: none;
+            width: 100px;
+        }
+        .content .selectmodel {
+            position: absolute;
+            left: 20px;
+            z-index: 3;
+            top: 10px;
+        }
+        .content .selectmodel input {
+            background-color: #e8ecf1;
+        }
+        .content .selectmodel .form-control {
+            min-width: 100px;
+        }
+        .content .detail-info {
+            border-left: 1px solid #1a1a1a;
+            height: 100%;
+            position: absolute;
+            right: 0;
+            top: 0;
+            -webkit-transition: all 1s;
+            -o-transition: all 1s;
+            -moz-transition: all 1s;
+            -ms-transition: all 1s;
+            transition: all 1s;
+            width: 319px;
+            z-index: 4;
+        }
+        .content .detail-info.close {
+            right: -320px;
+        }
+        .content .detail-info .title {
+            background-color: transparent;
+            border-bottom: 1px solid transparent;
+            border-top: 3px solid #ffdd3b;
+            color: #fff;
+            cursor: default;
+        }
+        .content .detail-info .chartload {
+            width: 100%;
+            height: 70%;
+            z-index: 5;
+        }
+        .content .location-trends {
+            background-color: #555c6e;
+            color: #fff;
+            display: block;
+            font-size: 12px;
+            left: 135px;
+            padding: 10px 15px 0;
+            position: absolute;
+            top: 240px;
+            width: 290px;
+            z-index: 5;
+            -webkit-transition: all 1s;
+            -o-transition: all 1s;
+            -moz-transition: all 1s;
+            -ms-transition: all 1s;
+            transition: all 1s;
+            -webkit-transform-origin: 5% 20%;
+            -ms-transform-origin: 5% 20%;
+            -o-transform-origin: 5% 20%;
+            -moz-transform-origin: 5% 20%;
+            transform-origin: 5% 20%;
+            -webkit-transform: scale(0.1);
+            -ms-transform: scale(0.1);
+            -o-transform: scale(0.1);
+            -moz-transform: scale(0.1);
+            transform: scale(0.1);
+            opacity: 0;
+            filter: alpah(opacity=0);
+        }
+        .content .location-trends.open {
+            -webkit-transform: scale(1);
+            -ms-transform: scale(1);
+            -o-transform: scale(1);
+            -moz-transform: scale(1);
+            transform: scale(1);
+            opacity: 1;
+            filter: alpah(opacity=100);
+        }
+        .content .location-trends .arrow {
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid #555c6e;
+            border-top: 8px solid transparent;
+            font-size: 0;
+            height: 0;
+            left: -7px;
+            position: absolute;
+            top: 68px;
+            width: 0;
+        }
+        .content .location-trends .close {
+            cursor: pointer;
+            height: 26px;
+            overflow: hidden;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 26px;
+            z-index: 7;
+        }
+        .content .location-trends .hd {
+            border-bottom: 1px dotted #666d7d;
+            line-height: 25px;
+            margin-top: 0;
+            padding-bottom: 5px;
+        }
+        .content .location-trends .hd .name {
+            display: inline-block;
+            font-size: 20px;
+            width: 14em;
+        }
+        .content .location-trends .trend {
+            position: relative;
+            width: 100%;
+            height: 200px;
+        }
+
+    </style>
+    <script>
+        /*代码说明：因为代码是一requirejs作为管理的，现在用于展示需要迁移为Cmd,很麻烦，再加上不会使用CDN，花了很长时间
+         大家可以随意使用，复制，扩展，有问题可以联系本人，一直在潜水*/
+        /*Javascript代码片段*/
+        var global={};
+        global.city=["鄂尔多斯","招远","舟山","齐齐哈尔","盐城","赤峰","青岛",
+            "乳山","金昌","泉州","莱西","日照","胶南","南通","拉萨","云浮","梅州","文登","上海","攀枝花",
+            "威海","承德","厦门","汕尾","潮州","丹东","太仓","曲靖","烟台","福州","瓦房店","即墨",
+            "抚顺","玉溪","张家口","阳泉","莱州","湖州","汕头","昆山","宁波","湛江","揭阳","荣成",
+            "连云港","葫芦岛","常熟",
+            "东莞","河源","淮安","泰州","南宁","营口","惠州","江阴","蓬莱","韶关","嘉峪关",
+            "广州","延安","太原","清远","中山","昆明","寿光","盘锦","长治","深圳","珠海",
+            "宿迁","咸阳","铜川","平度","佛山","海口","江门",
+            "章丘","肇庆","大连","临汾","吴江",
+            "石嘴山","沈阳","苏州","茂名","嘉兴","长春","胶州","银川",
+            "张家港","三门峡","锦州","南昌","柳州",
+            "三亚","自贡","吉林","阳江","泸州","西宁","宜宾","呼和浩特","成都","大同","镇江","桂林",
+            "张家界","宜兴","北海","西安","金坛","东营","牡丹江","遵义","绍兴","扬州","常州","潍坊",
+            "重庆","台州","南京","滨州","贵阳","无锡",
+            "本溪","克拉玛依","渭南","马鞍山","宝鸡","焦作","句容","北京","徐州","衡水","包头","绵阳",
+            "乌鲁木齐","枣庄",
+            "杭州","淄博","鞍山","溧阳","库尔勒","安阳","开封","济南","德阳","温州","九江","邯郸",
+            "临安","兰州","沧州",
+            "临沂","南充","天津","富阳","泰安","诸暨","郑州","哈尔滨","聊城","芜湖","唐山","平顶山",
+            "邢台","德州","济宁",
+            "荆州","宜昌","义乌","丽水","洛阳","秦皇岛","株洲","石家庄","莱芜","常德","保定","湘潭",
+            "金华","岳阳","长沙",
+            "衢州","廊坊","菏泽","合肥","武汉","大庆"
+        ];
+        //哈哈，看到一大堆害怕了吧，都是些固定写法
+        global.geoCoord=
+        {
+            "海门":[121.15,31.89],
+            "鄂尔多斯":[109.781327,39.608266],
+            "招远":[120.38,37.35],
+            "舟山":[122.207216,29.985295],
+            "齐齐哈尔":[123.97,47.33],
+            "盐城":[120.13,33.38],
+            "赤峰":[118.87,42.28],
+            "青岛":[120.33,36.07],
+            "乳山":[121.52,36.89],
+            "金昌":[102.188043,38.520089],
+            "泉州":[118.58,24.93],
+            "莱西":[120.53,36.86],
+            "日照":[119.46,35.42],
+            "胶南":[119.97,35.88],
+            "南通":[121.05,32.08],
+            "拉萨":[91.11,29.97],
+            "云浮":[112.02,22.93],
+            "梅州":[116.1,24.55],
+            "文登":[122.05,37.2],
+            "上海":[121.48,31.22],
+            "攀枝花":[101.718637,26.582347],
+            "威海":[122.1,37.5],
+            "承德":[117.93,40.97],
+            "厦门":[118.1,24.46],
+            "汕尾":[115.375279,22.786211],
+            "潮州":[116.63,23.68],
+            "丹东":[124.37,40.13],
+            "太仓":[121.1,31.45],
+            "曲靖":[103.79,25.51],
+            "烟台":[121.39,37.52],
+            "福州":[119.3,26.08],
+            "瓦房店":[121.979603,39.627114],
+            "即墨":[120.45,36.38],
+            "抚顺":[123.97,41.97],
+            "玉溪":[102.52,24.35],
+            "张家口":[114.87,40.82],
+            "阳泉":[113.57,37.85],
+            "莱州":[119.942327,37.177017],
+            "湖州":[120.1,30.86],
+            "汕头":[116.69,23.39],
+            "昆山":[120.95,31.39],
+            "宁波":[121.56,29.86],
+            "湛江":[110.359377,21.270708],
+            "揭阳":[116.35,23.55],
+            "荣成":[122.41,37.16],
+            "连云港":[119.16,34.59],
+            "葫芦岛":[120.836932,40.711052],
+            "常熟":[120.74,31.64],
+            "东莞":[113.75,23.04],
+            "河源":[114.68,23.73],
+            "淮安":[119.15,33.5],
+            "泰州":[119.9,32.49],
+            "南宁":[108.33,22.84],
+            "营口":[122.18,40.65],
+            "惠州":[114.4,23.09],
+            "江阴":[120.26,31.91],
+            "蓬莱":[120.75,37.8],
+            "韶关":[113.62,24.84],
+            "嘉峪关":[98.289152,39.77313],
+            "广州":[113.23,23.16],
+            "延安":[109.47,36.6],
+            "太原":[112.53,37.87],
+            "清远":[113.01,23.7],
+            "中山":[113.38,22.52],
+            "昆明":[102.73,25.04],
+            "寿光":[118.73,36.86],
+            "盘锦":[122.070714,41.119997],
+            "长治":[113.08,36.18],
+            "深圳":[114.07,22.62],
+            "珠海":[113.52,22.3],
+            "宿迁":[118.3,33.96],
+            "咸阳":[108.72,34.36],
+            "铜川":[109.11,35.09],
+            "平度":[119.97,36.77],
+            "佛山":[113.11,23.05],
+            "海口":[110.35,20.02],
+            "江门":[113.06,22.61],
+            "章丘":[117.53,36.72],
+            "肇庆":[112.44,23.05],
+            "大连":[121.62,38.92],
+            "临汾":[111.5,36.08],
+            "吴江":[120.63,31.16],
+            "石嘴山":[106.39,39.04],
+            "沈阳":[123.38,41.8],
+            "苏州":[120.62,31.32],
+            "茂名":[110.88,21.68],
+            "嘉兴":[120.76,30.77],
+            "长春":[125.35,43.88],
+            "胶州":[120.03336,36.264622],
+            "银川":[106.27,38.47],
+            "张家港":[120.555821,31.875428],
+            "三门峡":[111.19,34.76],
+            "锦州":[121.15,41.13],
+            "南昌":[115.89,28.68],
+            "柳州":[109.4,24.33],
+            "三亚":[109.511909,18.252847],
+            "自贡":[104.778442,29.33903],
+            "吉林":[126.57,43.87],
+            "阳江":[111.95,21.85],
+            "泸州":[105.39,28.91],
+            "西宁":[101.74,36.56],
+            "宜宾":[104.56,29.77],
+            "呼和浩特":[111.65,40.82],
+            "成都":[104.06,30.67],
+            "大同":[113.3,40.12],
+            "镇江":[119.44,32.2],
+            "桂林":[110.28,25.29],
+            "张家界":[110.479191,29.117096],
+            "宜兴":[119.82,31.36],
+            "北海":[109.12,21.49],
+            "西安":[108.95,34.27],
+            "金坛":[119.56,31.74],
+            "东营":[118.49,37.46],
+            "牡丹江":[129.58,44.6],
+            "遵义":[106.9,27.7],
+            "绍兴":[120.58,30.01],
+            "扬州":[119.42,32.39],
+            "常州":[119.95,31.79],
+            "潍坊":[119.1,36.62],
+            "重庆":[106.54,29.59],
+            "台州":[121.420757,28.656386],
+            "南京":[118.78,32.04],
+            "滨州":[118.03,37.36],
+            "贵阳":[106.71,26.57],
+            "无锡":[120.29,31.59],
+            "本溪":[123.73,41.3],
+            "克拉玛依":[84.77,45.59],
+            "渭南":[109.5,34.52],
+            "马鞍山":[118.48,31.56],
+            "宝鸡":[107.15,34.38],
+            "焦作":[113.21,35.24],
+            "句容":[119.16,31.95],
+            "北京":[116.46,39.92],
+            "徐州":[117.2,34.26],
+            "衡水":[115.72,37.72],
+            "包头":[110,40.58],
+            "绵阳":[104.73,31.48],
+            "乌鲁木齐":[87.68,43.77],
+            "枣庄":[117.57,34.86],
+            "杭州":[120.19,30.26],
+            "淄博":[118.05,36.78],
+            "鞍山":[122.85,41.12],
+            "溧阳":[119.48,31.43],
+            "库尔勒":[86.06,41.68],
+            "安阳":[114.35,36.1],
+            "开封":[114.35,34.79],
+            "济南":[117,36.65],
+            "德阳":[104.37,31.13],
+            "温州":[120.65,28.01],
+            "九江":[115.97,29.71],
+            "邯郸":[114.47,36.6],
+            "临安":[119.72,30.23],
+            "兰州":[103.73,36.03],
+            "沧州":[116.83,38.33],
+            "临沂":[118.35,35.05],
+            "南充":[106.110698,30.837793],
+            "天津":[117.2,39.13],
+            "富阳":[119.95,30.07],
+            "泰安":[117.13,36.18],
+            "诸暨":[120.23,29.71],
+            "郑州":[113.65,34.76],
+            "哈尔滨":[126.63,45.75],
+            "聊城":[115.97,36.45],
+            "芜湖":[118.38,31.33],
+            "唐山":[118.02,39.63],
+            "平顶山":[113.29,33.75],
+            "邢台":[114.48,37.05],
+            "德州":[116.29,37.45],
+            "济宁":[116.59,35.38],
+            "荆州":[112.239741,30.335165],
+            "宜昌":[111.3,30.7],
+            "义乌":[120.06,29.32],
+            "丽水":[119.92,28.45],
+            "洛阳":[112.44,34.7],
+            "秦皇岛":[119.57,39.95],
+            "株洲":[113.16,27.83],
+            "石家庄":[114.48,38.03],
+            "莱芜":[117.67,36.19],
+            "常德":[111.69,29.05],
+            "保定":[115.48,38.85],
+            "湘潭":[112.91,27.87],
+            "金华":[119.64,29.12],
+            "岳阳":[113.09,29.37],
+            "长沙":[113,28.21],
+            "衢州":[118.88,28.97],
+            "廊坊":[116.7,39.53],
+            "菏泽":[115.480656,35.23375],
+            "合肥":[117.27,31.86],
+            "武汉":[114.31,30.52],
+            "大庆":[125.03,46.58]
+        };
+        //产生数据用；
+        var  dataFactory={
+            getSeriesData:function(count){
+                var data=[];
+                var rand=0;
+                for(var i=0;i<count;i++){
+                    rand=Math.random();
+                    data.push({name:global.city[Math.floor(rand*global.city.length)]
+                        ,value:Math.round(rand*100)});
+                    //console.log(Math.floor(rand*global.city.length))
+
+                }
+                return data;
+            },
+            getMarkLineData:function(cityname){
+                var data=[];
+                var datalength=Math.floor(Math.random()*30);
+                for(var i=0;i<datalength;i++){
+                    var cityindex=Math.floor(Math.random()*global.city.length);
+                    data.push([{name:global.city[cityindex]}, {name:cityname,value:Math.floor(Math.random()*100)}]);
+                }
+                return data;
+            }
+        };
+        //点击预测的处理函数;
+        var detail={
+            showDetail:function(data,id){
+                var option = {
+                    grid:{
+                        x:5,
+                        y:5,
+                        x2:50,
+                        y2:5,
+                        borderWidth :0
+                    },
+                    tooltip :{
+                        trigger: 'item'
+                    },
+                    calculable : false,
+                    xAxis : [
+                        {
+                            show:false,
+                            type : 'value',
+                            boundaryGap : [0, 0.01]
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            show:false,
+
+                            type : 'category',
+                            data : (function(value){
+                                var arr=[];
+                                for (var i = 0; i < value.length; i++) {
+                                    arr.push(value[i][0].name);
+                                }
+                                return arr;
+                            })(data)
+                        }
+                    ],
+                    series : [
+                        {
+                            itemStyle: {
+                                normal: {
+                                    color: function(params) {
+                                        // build a color map as your need.
+                                        var colorList = [
+                                            '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+                                            '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+                                            '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                                        ];
+                                        return colorList[params.dataIndex%colorList.length]
+                                    },
+                                    label: {
+                                        show: true,
+                                        position: 'right',
+                                        formatter: '{b}\n{c}'
+                                    }
+                                }
+                            },
+                            name:'负载详情',
+                            type:'bar',
+                            data:(function(value){
+                                var arr=[];
+                                for (var i = 0; i < value.length; i++) {
+                                    arr.push(value[i][1].value-0);
+                                }
+                                return arr;
+                            })(data)
+                        }
+
+                    ]
+                };
+                var barchart=echarts.init(document.getElementById(id));
+                barchart.setOption(option);
+                $(".detail-info").removeClass("close");
+            },
+            showPredict:function(city){
+                var option= {
+                    grid:{
+                        x:25,
+                        y:25,
+                        x2:25,
+                        y2:50,
+                        borderWidth :0
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    calculable : false,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            splitLine :{
+                                show:false,
+
+                            },
+                            axisLabel:{
+                                textStyle :{
+                                    color: '#fff'
+                                }
+                            },
+                            data : (function(){
+                                var data=[];
+                                var time=new Date().getTime();
+                                for(var i=1;i < 8;i++){
+                                    var date=new Date(time+3600*1000*24*i);
+                                    var month=date.getMonth()>8?(date.getMonth()+1):"0"+(date.getMonth()+1);
+                                    var day=date.getDate()>9?date.getDate():"0"+date.getDate() ;
+                                    data.push(month+"-"+day);
+                                }
+                                return data;
+                            })()
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            show:false,
+                            type : 'value',
+
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'预测 :'+city,
+                            type:'line',
+                            itemStyle:{
+                                normal: {
+                                    color:"#fff"
+                                }
+
+                            },
+                            data:(function(){
+                                var data=[];
+                                for (var i = 0; i < 7; i++) {
+                                    data.push(Math.floor(Math.random()*100+1));
+                                }
+                                return data;
+                            })()
+
+                        }
+
+                    ]
+                };
+                var barchart=echarts.init(document.getElementById("trend-chart"));
+                barchart.setOption(option);
+                $(".location-trends").addClass("open");
+                $(".location-trends").find(".hd .name").text(city);
+
+            }
+        };
+
+        //接下来是界面加载启动器；
+        var myChart = echarts.init(document.getElementById("map"));
+        var citydata=dataFactory.getSeriesData(20);
+        function bindEvent(){
+            $(".side-toggle").on("click",function(){
+                if($(this).find("span").hasClass("fa-chevron-right")){
+                    $(this).find("span").removeClass("fa-chevron-right").addClass("fa-chevron-left");
+                }else{
+                    $(this).find("span").removeClass("fa-chevron-left").addClass("fa-chevron-right");
+                }
+                $(".detail-info").toggleClass("close");
+            });
+            $("#more-info").on("click",function(){
+                if($(".location-trends").hasClass("open")){
+                    $(".location-trends").removeClass("open");
+                }else{
+                    var city=$(this).attr("city");
+                    detail.showPredict(city);
+                }
+
+            });
+            $(".location-trends .close").on("click",function(){
+                $(".location-trends").removeClass("open");
+            });
+
+        }
+        bindEvent();
+        var  option = {
+            backgroundColor: '#1b1b1b',
+            color: ['gold','aqua','lime'],
+            title : {
+                text: '运维平台监控',
+                x:'center',
+                textStyle : {
+                    color: '#fff'
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter:function(params){
+                    if(params.value=='-'){
+                        return params.name;
+                    }else{
+                        return params.name+"<br>"+params.value;
+                    }
+                }
+
+            },
+            toolbox: {
+                show : false,
+                orient : 'vertical',
+                x: 'right',
+                y: 'center',
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            dataRange: {
+                min : 0,
+                max : 100,
+                calculable : true,
+                color: ['#ff3333', 'orange', 'yellow','lime','aqua'],
+                textStyle:{
+                    color:'#fff'
+                }
+            },
+            series : [
+                {
+                    name: '全国',
+                    type: 'map',
+                    roam: true,
+                    hoverable: false,
+                    mapType: 'china',
+                    //mapLocation:{x:'left',y:'center'},
+                    scaleLimit:{max:3,min:0.5},
+                    itemStyle:{
+                        normal:{
+                            borderColor:'rgba(100,149,237,1)',
+                            borderWidth:0.2,
+                            areaStyle:{
+                                color: '#1b1b1b'
+                            }
+                        }
+                    },
+                    data:[],
+                    markLine : {
+                        smooth:true,
+                        effect : {
+                            show: true,
+                            scaleSize: 1,
+                            period: 30,
+                            color: '#fff',
+                            shadowBlur: 10
+                        },
+                        itemStyle : {
+                            normal: {
+                                borderWidth:1,
+                                lineStyle: {
+                                    type: 'solid',
+                                    shadowBlur: 3
+                                }
+                            }
+                        },
+                        data : [ ]
+                    },
+                    markPoint : {
+                        symbolSize : function (v){
+                            return 3 + v/10
+                        },       // 标注大小，半宽（半径）参数，当图形为方向或菱形则总宽度为symbolSize * 2
+                        itemStyle: {
+                            normal: {
+                                borderColor: '#87cefa',
+                                borderWidth: 1,            // 标注边线线宽，单位px，默认为1
+                                label: {
+                                    show: true,
+                                    position:'top',
+                                    formatter:function(){
+                                        return arguments[1];
+                                    }
+                                }
+                            },
+                            emphasis: {
+                                borderColor: '#1e90ff',
+                                borderWidth: 5,
+                                label: {
+                                    show:true
+                                }
+                            }
+                        },
+                        data : citydata
+                    },
+                    geoCoord:global.geoCoord
+                },
+                {
+                    name: 'highLight',
+                    type: 'map',
+                    mapType: 'china',
+                    data:[],
+                    markPoint : {
+                        symbol:'emptyCircle',
+                        symbolSize : function (v){
+                            return 15 ;
+                        },
+                        effect : {
+                            show: true,
+                            shadowBlur : 0
+                        },
+                        itemStyle:{
+                            normal:{
+                                label:{show:false}
+                            }
+                        },
+                        data : []
+                    }
+                }
+
+            ]
+        };
+        function reloadTips(data){
+            var sum=0;
+            for (var i = 0; i < data.length; i++) {
+                sum+=data[i][1].value-0;
+            }
+            var index=Math.round(Math.random()*100);
+            $("div.location-detail").addClass("active");
+            $(".location-detail").find(".location-name").text(data[0][1].name).end()
+                    .find(".number:first").text(sum).end()
+                    .find(".number:last").text(index);
+            detail.showDetail(data,"infochart");
+        }
+        function renderMarkData(param){
+            var markdata=dataFactory.getMarkLineData(param.name);
+            option.series[0].markLine.data=markdata;
+            option.series[1].markPoint.data=[{name:param.name,value:param.value}];
+            myChart.setOption(option,true);
+            reloadTips(markdata);
+
+        }
+
+        myChart.setOption(option);
+        myChart.on(echarts.config.EVENT.CLICK, function (param){
+            if(param.seriesName!=""&&param.value!=""){
+                renderMarkData(param);
+                $("#more-info").attr("city",param.name);
+            }
+
+        })
+    </script>
+</head>
+<body>
+<nav id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">Project name</a>
+        </div>
+        <div class="navbar-collapse collapse" >
+            <ul class="nav navbar-nav">
+                <li><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="dropdown">
+                    <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider" role="separator"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Default</a></li>
+                <li><a href="#">Static top</a></li>
+                <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<!--导航栏完成-->
+<div class="container-fluid content">
+    <div class="map" id="map"></div>
+    <div class="selectmodel">
+        <form class="form-inline">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">节点：</div>
+                    <select class="form-control">
+                        <option>a</option>
+                        <option>b</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">地区名称：</div>
+                    <input type="text" class="form-control"  placeholder="请输入地区名称">
+				      <span class="input-group-btn">
+				        <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
+				      </span>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="location-detail">
+    		<span class="location">
+    			<span class="location-label">目的地：</span>
+    			<span class="location-name">北京</span>
+    		</span>
+        <div class="label">负载值：</div>
+        <div class="number">71,876</div>
+        <div class="label">目标排名：</div>
+        <div class="number">1</div>
+        <a id="more-info" class="view-trends" href="javascript:void(0)">查看预测</a>
+    </div>
+    <!-- 左侧的详细信息完成 -->
+    <!-- 开始预测内容 -->
+    <div class="location-trends">
+        <div class="arrow"></div>
+        <div class="close"><span class="fa fa-close" style="color: #fff;"></span></div>
+        <div class="hd">
+            <span class="name">北京</span>
+        </div>
+        <div id="trend-chart" class="trend"></div>
+    </div>
+    <!-- 右侧详细信息 -->
+    <div class="detail-info close">
+        <a  href="javascript: void(0);" class="side-toggle">
+            <span class="fa fa-chevron-right"></span>
+        </a>
+        <h3 class="title text-center">负载详细来源</h3>
+        <div id="infochart" class="chartload"></div>
+    </div>
+
+
+</div>
+<script type="text/javascript" src="http://cdn.gbtags.com/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdn.gbtags.com/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+
+
+</body>
+</html>

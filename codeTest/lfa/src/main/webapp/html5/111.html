@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script>
+        $(function (){
+
+            $("ul").hide();
+
+            $("h3").click(function(){
+                $("ul").slideToggle();
+
+
+            });
+
+
+        });
+    </script>
+    <style>
+        h3{width: 100px;height: 50px;background: #f00;}
+        ul{width:200px;padding:10px;}
+        li{ float:left;padding-right:20px;}
+
+    </style>
+</head>
+<body>
+<h3>点击</h3>
+<ul>
+    <li><a href="###">11</a></li>
+    <li><a href="###">22</a></li>
+    <li><a href="###">33</a></li>
+    <li><a href="###">44</a></li>
+    <li><a href="###">55</a></li>
+</ul>
+</body>
+</html>

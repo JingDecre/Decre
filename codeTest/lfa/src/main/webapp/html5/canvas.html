@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas</title>
+   <!-- <script src="js/canvas.js"></script>-->
+    <script>
+       /* function draw(id){//图形渐变
+            var canvas = document.getElementById(id);
+            var context = canvas.getContext("2d");
+            var g1 = context.createLinearGradient(0,0,0,300);
+            g1.addColorStop(0,"rgb(255,255,0)");
+            g1.addColorStop(0,"rgb(0,255,255)");
+            context.fillStyle = g1;
+            context.fillRect(0,0,500,500);
+            var g2 = context.createLinearGradient(0,0,300,0);
+            g2.addColorStop(0,"rgba(0,0,255,0.5)");
+            g2.addColorStop(1,"rgba(255,0,0,0.5)");
+            for (var i = 0; i <10;i++){
+                context.beginPath();
+                context.fillStyle = g2;
+                context.arc(i*25,i*25,i*10,0,Math.PI*2,true);
+                context.closePath();
+                context.fill();
+            }
+        }*/
+
+       /* function draw(id){//径向渐变
+            var canvas = document.getElementById(id);
+            if(canvas == null){
+                return false;
+            }
+            var context = canvas.getContext("2d");
+            var g1 = context.createRadialGradient(400,0,0,400,0,400);
+            g1.addColorStop(0.1,"rgb(255,235,0)");
+            g1.addColorStop(0.5,"rgb(235,0,255)");
+            g1.addColorStop(1,"rgb(0,255,255)");
+            context.fillStyle  = g1;
+            context.fillRect(0,0,500,500);
+
+        }*/
+        /*function draw(id){//绘制变形图形
+            var canvas = document.getElementById(id);
+            if(canvas == null){
+                return false;
+            }
+            var context = canvas.getContext("2d");
+            context.fillStyle = "#eeeeef";
+            context.fillRect(0,0,500,500);
+            context.translate(250,150);
+            context.fillStyle = "rgba(255,0,0,0.25)";
+            for(var i = 0 ; i<50;i++){
+                context.translate(25,25);
+                context.scale(0.95,0.95);
+                context.rotate(Math.PI/10);
+                context.fillRect(0,0,100,100);
+            }
+        }*/
+        function draw(id){
+            var canvas = document.getElementById(id);
+            var context = canvas.getContext("2d");
+            var oprtns = new Array(
+                    "source-atop",
+                    "source-in",
+                    "source-out",
+                    "source-over",
+                    "destination-atop",
+                    "destination-in",
+                    "destination-out",
+                    "destination-over",
+                    "lighter",
+                    "copy",
+                    "xor"
+            );
+            i = 8;
+            context.fillStyle="blue";
+            context.fillRect(10,10,60,60);
+            context.globalCompositeOperation = oprtns[i];
+            context.beginPath();
+            context.fillStyle = "red";
+            context.arc(60,60,30,Math.PI*2,false);
+            context.fill();
+        }
+
+    </script>
+</head>
+<body onload="draw('myCanvas')">
+    <!--<script>
+        var canvas = document.getElementById('myCanvas');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+        }
+        ctx.beginPath(); // 开始路径绘制
+        ctx.moveTo(20, 20); // 设置路径起点，坐标为(20,20)
+        ctx.lineTo(200, 20); // 绘制一条到(200,20)的直线
+        ctx.lineWidth = 1.0; // 设置线宽
+        ctx.strokeStyle = "#CC0000"; // 设置线的颜色
+        ctx.stroke(); // 进行线的着色，这时整条线才变得可见
+
+    </script>-->
+    <canvas id="myCanvas" width="500" height="500">您的浏览器不支持canvas!</canvas>
+</body>
+</html>

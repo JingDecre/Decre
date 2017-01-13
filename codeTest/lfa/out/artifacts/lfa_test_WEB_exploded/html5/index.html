@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>input元素</title>
+</head>
+<body>
+    <form>
+        <input name="url" type="url" value="http://www.keytop.com.cn">
+        <input type="submit" value="提交">
+        <br><br>
+    </form>
+    <form>
+        <input name="email" type="email" value="jingdecre@163.com">
+        <input type="submit" value="提交">
+        <br><br>
+    </form>
+    <form>
+        <input name="date" type="date" value="" >
+        <input name="time" type="time" value="">
+        <br><br>
+    </form>
+    <input name="range" type="range" value="25" min="0" max="100" step="5">
+    <input type="color" onchange="document.body.style.backgroundColor = document.getElementById('currentColor').textContent = this.value;">
+    <span id="currentColor"></span>
+</body>
+</html>

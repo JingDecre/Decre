@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dateil</title>
+</head>
+<body>
+    <script>
+        function detail_onclick(detail){
+            var p = document.getElementById("p");
+            if(detail.open){
+                p.style.visibility = "hidden";
+            }else {
+                p.style.visibility = "visible";
+            }
+        }
+    </script>
+    <details id="detail" onclick="detail_onclick(this)">
+        <summary>速度与激情7</summary>
+        <p id="p" style="visibility:hidden">你好吗，这是为保罗特意打造的电影，看起来激情四射</p>
+    </details>
+</body>
+</html>

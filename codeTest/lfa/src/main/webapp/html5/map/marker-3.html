@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加/删除覆盖物</title>
+    <style>
+        html{height: 100%}
+        body{height: 100%}
+        #allmap{width: 100% ;height: 100%}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=iQ5QGtEYuTDLI4LCnp9njGtB9KucyKcE"></script>
+</head>
+<body>
+    <div id="allmap"></div>
+
+</body>
+</html>
+<script>
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point(118.192677,24.488377);
+    map.centerAndZoom(point,15);
+
+    var pt = new BMap.Point(118.192677,24.488377);
+    var myIcon = new BMap.Icon("../raw/icon-P.png", new BMap.Size(300,157));
+    var marker2 = new BMap.Marker(pt,{icon:myIcon});  // 创建标注
+    map.addOverlay(marker2);              // 将标注添加到地图中
+    marker2.setAnimation(BMAP_ANIMATION_BOUNCE);
+    marker2.addEventListener("click",function(e){
+        alert("地址坐标为："+ e.point.lng+","+ e.point.lat);
+
+    })
+</script>

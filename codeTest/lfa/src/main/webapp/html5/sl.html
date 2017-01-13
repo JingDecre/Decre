@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>网页右侧弹出固定伸缩框</title>
+    <style type="text/css">
+        #common_box{width:300px;height: 80%; position:fixed;_position:absolute;right:0;top:10px;border:1px solid #789;background:#fff;z-index:150}
+        #cli_on{width:30px;height:180px;float:left;cursor:pointer;background:#ac8932;text-align:center;line-height:180px}
+    </style>
+</head>
+
+<body>
+<div style="width:100%;height:1024px;background:#789"></div>
+<div>
+    <div id="cli_on">+</div>
+    <div  id="common_box">
+        这里放置菜单内容
+    </div>
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+    window.onload = function() {
+        var combox = document.getElementById("common_box");
+        var cli_on = document.getElementById("cli_on");
+        var flag = true, timer = null, initime = null, r_len = 0;
+
+        cli_on.onclick = function () {
+            /*如果不需要动态效果，这两句足矣
+             combox.style.right = flag?'-270px':0;
+             flag = !flag;
+             */
+            clearTimeout(initime);
+            //根据状态flag执开展开收缩
+            if (flag) {
+                r_len = 0;
+                timer = setInterval(slideright, 10);
+            } else {
+                r_len = -270;
+                timer = setInterval(slideleft, 10);
+            }
+        }
+
+        //展开
+        function slideright() {
+            if (r_len <= -270) {
+                clearInterval(timer);
+                flag = !flag;
+                return false;
+            } else {
+                r_len -= 5;
+                combox.style.right = r_len + 'px';
+            }
+
+        }
+
+        //收缩
+        function slideleft() {
+            if (r_len >= 0) {
+                clearInterval(timer);
+                flag = !flag;
+                return false;
+            } else {
+                r_len += 5;
+                combox.style.right = r_len + 'px';
+            }
+        }
+
+        //加载后3秒页面自动收缩
+        initime = setTimeout("cli_on.click()", 3000);
+    }
+</script>
